@@ -8,8 +8,8 @@ import {
   ActivityIndicator,
   Alert,
   Platform,
-  SafeAreaView, // Añadido para mejor manejo del área segura
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useNavigation } from 'expo-router';
 import { useLayoutEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';

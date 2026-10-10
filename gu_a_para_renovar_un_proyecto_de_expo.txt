@@ -1,0 +1,30 @@
+GUÍA PASO A PASO PARA RETOMAR/ACTUALIZAR UN PROYECTO VIEJO DE EXPO
+------------------------------------------------------------------
+
+Sigue estos pasos exactamente en este orden desde la terminal (asegúrate de estar en la carpeta raíz de tu proyecto, por ejemplo: lascaliforniasapp).
+
+PASO 1: Eliminar archivos viejos y caché (Comandos para Windows)
+Es fundamental empezar en limpio. Esto elimina cualquier rastro de instalaciones corruptas o versiones que estén chocando.
+
+> rmdir /s /q node_modules
+> del package-lock.json
+
+PASO 2: Actualizar el núcleo de Expo
+Este es el comando principal. Identificará la versión más reciente del SDK de Expo y actualizará automáticamente react, react-native, expo-router y todos los paquetes base a las versiones exactas que son compatibles entre sí. (Si te pregunta si quieres instalar la nueva versión, presiona Y o Enter).
+
+> npx expo upgrade
+
+PASO 3: Alinear dependencias de terceros
+Este comando revisa el resto de los paquetes instalados y ajusta las versiones de cualquier dependencia extra para que no haya conflictos con el nuevo SDK.
+
+> npx expo install --fix
+
+PASO 4: Arrancar limpiando la caché
+Inicia tu proyecto obligando al empaquetador (Metro) a construir todo desde cero, ignorando cualquier archivo temporal viejo que haya quedado en memoria.
+
+> npx expo start -c
+
+
+------------------------------------------------------------------
+REGLA DE ORO PARA EXPO:
+Nunca uses "npm audit fix" en un proyecto de Expo. Esa herramienta intenta actualizar paquetes a su última versión absoluta de npm, ignorando las versiones específicas que el SDK de Expo necesita para funcionar de forma estable.

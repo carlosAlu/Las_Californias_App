@@ -2,13 +2,13 @@ import { useNavigation, useRouter } from 'expo-router';
 import React, { useLayoutEffect } from 'react';
 import {
   Image,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // *** CONSTANTES DE MARCA (Para consistencia) ***
 const COLOR_PRIMARY = '#003366'; // Azul Oscuro de Marca

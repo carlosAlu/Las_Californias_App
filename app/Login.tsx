@@ -9,10 +9,10 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  SafeAreaView,
   Alert,
   Platform,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // *** CONSTANTES DE MARCA ***
 const COLOR_PRIMARY = '#003366'; // Azul Oscuro de Marca

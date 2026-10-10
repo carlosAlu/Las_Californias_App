@@ -3,7 +3,6 @@ import React, { useLayoutEffect, useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -11,6 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // *** CONSTANTES DE MARCA ***
 const COLOR_PRIMARY = '#003366'; // Azul Oscuro de Marca

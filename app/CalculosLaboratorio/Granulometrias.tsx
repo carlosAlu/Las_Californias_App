@@ -8,8 +8,8 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // *** CONSTANTES DE MARCA (Para consistencia) ***
 const COLOR_PRIMARY = '#003366'; // Azul Oscuro de Marca

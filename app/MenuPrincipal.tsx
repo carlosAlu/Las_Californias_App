@@ -1,14 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
-import * as MediaLibrary from 'expo-media-library';
+import * as MediaLibrary from 'expo-media-library/legacy';
 import { useFocusEffect, useNavigation, useRouter } from 'expo-router';
 import { useCallback, useLayoutEffect, useState } from 'react';
 import {
   BackHandler,
   Image,
   Modal,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -16,6 +15,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // Configuración de botones (Tu data original)
 const buttons = [
@@ -61,7 +61,7 @@ export default function MenuPrincipalScreen() {
     if (status !== 'granted') { alert('Permiso de cámara denegado'); return; }
     const { status: locationStatus } = await Location.requestForegroundPermissionsAsync();
     if (locationStatus !== 'granted') { alert('Permiso de ubicación denegado'); return; }
-    const { status: mediaStatus } = await MediaLibrary.requestPermissionsAsync();
+    const { status: mediaStatus } = await MediaLibrary.requestPermissionsAsync(true);
     if (mediaStatus !== 'granted') { alert('Permiso de galería denegado'); return; }
 
     const location = await Location.getCurrentPositionAsync({});
