@@ -46,12 +46,12 @@ export default function Cilindros() {
     setArea(null);
 
     // Parsear valores de texto a números flotantes
-    const d = parseFloat(diametro);
-    const c = parseFloat(carga);
-    const fcValue = parseFloat(fc);
+    const d = Number(diametro);
+    const c = Number(carga);
+    const fcValue = Number(fc);
 
     // Validar que los valores sean números y mayores que cero
-    if (isNaN(d) || isNaN(c) || isNaN(fcValue) || d <= 0 || c <= 0 || fcValue <= 0) {
+    if (![d, c, fcValue].every(Number.isFinite) || d <= 0 || c <= 0 || fcValue <= 0) {
       // Modificado para mostrar la unidad en el error (resistencia debería ser un porcentaje)
       setError('Por favor ingresa valores válidos y mayores a cero.');
       return;
@@ -88,7 +88,7 @@ export default function Cilindros() {
           keyboardShouldPersistTaps="handled"
         >
           {/* Título principal con estilo de marca */}
-          <Text style={styles.title}>Cálculo de Resistencia de Cilindros</Text>
+          <Text style={styles.title}>Cálculo de Proctor</Text>
 
           {/* Sección para ingresar datos (Tarjeta de Entradas) */}
           <View style={styles.card}>
@@ -126,9 +126,9 @@ export default function Cilindros() {
                 {resistencia !== null && (
                   <>
                     <View style={styles.resultRow}>
-                        <Text style={styles.resultLabel}>Resistencia (f'c):</Text>
+                        <Text style={styles.resultLabel}>Resistencia (f&apos;c):</Text>
                         <Text style={styles.resultValueMajor}>
-                            {area ? (parseFloat(carga) / area).toFixed(2) : '0'} kgf/cm²
+                            {area ? (Number(carga) / area).toFixed(2) : '0'} kgf/cm²
                         </Text>
                     </View>
                     <View style={[styles.resultRow, styles.finalResultRow]}>
@@ -305,44 +305,37 @@ const styles = StyleSheet.create({
     borderTopWidth: 2,
     borderTopColor: COLOR_ACCENT, // Separador final dorado
     borderBottomWidth: 0,
+    flexWrap: 'wrap',
   },
   // Nuevo: Etiqueta de resultado (texto normal)
   resultLabel: {
     color: '#333333',
     fontSize: 16,
     fontWeight: '500',
-    flex: 1,
   },
   // Nuevo: Etiqueta de resultado final
   resultLabelFinal: {
     color: COLOR_PRIMARY,
     fontSize: 18,
     fontWeight: '700',
-    flex: 1,
   },
   // Modificado: Valor de resultado (la cifra)
   resultValue: {
     color: COLOR_PRIMARY, // Azul oscuro
     fontWeight: '600',
     fontSize: 17,
-    flex: 1,
-    textAlign: 'right',
   },
   // Nuevo: Valor de resistencia simple
   resultValueMajor: {
     color: COLOR_PRIMARY, // Azul Oscuro
     fontWeight: '700',
     fontSize: 18,
-    flex: 1,
-    textAlign: 'right',
   },
   // Nuevo: Valor de resultado final (el porcentaje)
   resultValueFinal: {
     color: COLOR_ERROR, // Rojo fuerte para el valor importante
     fontWeight: '900', // Muy negrita
     fontSize: 24, // ¡Destacado!
-    flex: 1,
-    textAlign: 'right',
   },
   // Mejorado: Error en color de marca
   errorText: {

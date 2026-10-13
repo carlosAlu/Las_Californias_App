@@ -53,13 +53,9 @@ export default function Lavados() {
   }, [retained]);
 
   const rows = useMemo(() => {
-    let prevPassed = 100;
     const paso4Num = parseFloat(Paso4) || 0;
-    
-    // Suma acumulada para el cálculo de % Pasa
-    let sumPctRetenido = 0;
 
-    return SIEVES.map((sieve, idx) => {
+    return SIEVES.reduce((acc, sieve) => {
       const w = parseFloat(autoRetained[sieve.id]) || 0;
       
       // % retenido parcial respecto a los 200g de muestra de lavado: (w / 200) * 100
@@ -69,23 +65,30 @@ export default function Lavados() {
       const pctRaw = (pctRetenidoParcial * paso4Num) / 100;
 
       // Usamos el % Retenido acumulado para calcular el % Pasa
-      sumPctRetenido += pctRaw;
-      
+      const sumPctRetenido = acc.sumPctRetenido + pctRaw;
       const passed = paso4Num - sumPctRetenido;
       
       // El último % Pasa debe ser 0, ya que es la suma de los que pasan el No.200
       const finalPassed = sieve.id === 'Pasa200' ? '0.00' : passed.toFixed(2);
 
-
       return {
-        id: sieve.id,
-        label: sieve.label,
-        peso: w.toFixed(2), // Peso Retenido
-        pct: pctRaw.toFixed(2), // % Retenido (respecto al total original)
-        pctRounded: sumPctRetenido.toFixed(2), // % Retenido Acumulado
-        passed: finalPassed, // % Pasa
+        rows: [
+          ...acc.rows,
+          {
+            id: sieve.id,
+            label: sieve.label,
+            peso: w.toFixed(2), // Peso Retenido
+            pct: pctRaw.toFixed(2), // % Retenido (respecto al total original)
+            pctRounded: sumPctRetenido.toFixed(2), // % Retenido Acumulado
+            passed: finalPassed, // % Pasa
+          },
+        ],
+        sumPctRetenido,
       };
-    });
+    }, {
+      rows: [] as { id: string; label: string; peso: string; pct: string; pctRounded: string; passed: string }[],
+      sumPctRetenido: 0,
+    }).rows;
   }, [autoRetained, Paso4]);
 
   // Permitir solo números y un punto decimal
@@ -115,13 +118,13 @@ export default function Lavados() {
             keyboardShouldPersistTaps="handled"
         >
             {/* Título principal con estilo de marca */}
-            <Text style={styles.title}>Cálculo de Lavados</Text>
+            <Text style={styles.title}>Cálculo De Lavados</Text>
             
             {/* Tarjeta de Entrada de Datos */}
             <View style={styles.card}>
-                <Text style={styles.sectionTitle}>1. Dato de Entrada</Text>
+                <Text style={styles.sectionTitle}>1. Dato De Entrada</Text>
                 <LabelledInput
-                    label="% Que pasó el tamiz No.4 (de Granulometría)"
+                    label="% Que Pasó La Malla No.4 (de Granulometría)"
                     value={Paso4}
                     onChange={text => setPaso4(cleanDecimalInput(text))}
                     placeholder="Ej: 98.5"
@@ -130,7 +133,7 @@ export default function Lavados() {
 
             {/* Tarjeta de la Tabla */}
             <View style={styles.cardTable}>
-                <Text style={styles.sectionTitle}>2. Tabla de Análisis por Lavado</Text>
+                <Text style={styles.sectionTitle}>2. Tabla De Análisis Por Lavado</Text>
                 
                 {/* Encabezado de tabla (MANTENIENDO ESTRUCTURA) */}
                 <View style={styles.tableHeader}>

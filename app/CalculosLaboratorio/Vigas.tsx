@@ -37,11 +37,11 @@ export default function Vigas() {
   const handleCalcular = () => {
     setError('');
     setResultado(null);
-    const c = parseFloat(carga);
+    const c = Number(carga);
     
     // Validación para que la carga sea un número mayor que 0
-    if (isNaN(c) || c <= 0) {
-      setError('Por favor ingresa un valor válido y mayor a cero para la Carga.');
+    if (!Number.isFinite(c) || c <= 0) {
+      setError('Por Favor Ingresa Un Valor Válido Y Mayor A Cero Para La Carga.');
       return;
     }
     
@@ -77,12 +77,12 @@ export default function Vigas() {
           
           {/* Sección para ingresar datos (Tarjeta de Entradas) */}
           <View style={styles.card}>
-            <Text style={styles.sectionTitle}>1. Datos de Entrada</Text>
+            <Text style={styles.sectionTitle}>1. Datos De Entrada</Text>
             
             {/* Input personalizado para la carga con mejor etiqueta */}
             <CustomInput label="Carga (kg)" value={carga} setValue={setCarga} />
 
-            <Text style={[styles.inputLabel, { marginTop: 10 }]}>Factor de Módulo de Ruptura:</Text>
+            <Text style={[styles.inputLabel, { marginTop: 10 }]}>Factor De Módulo De Ruptura:</Text>
             
             {/* Selector mejorado para elegir el tipo de módulo de ruptura */}
             <View style={styles.selectorContainer}>
@@ -96,7 +96,7 @@ export default function Vigas() {
                     tipo === 'centro' && styles.selectorSubtextSelected
                   ]}
                 >
-                  Ruptura al Centro
+                  Ruptura Al Centro
                 </Text>
                 <Text
                   style={[

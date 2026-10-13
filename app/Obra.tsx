@@ -18,10 +18,12 @@ const COLOR_TEXT_DARK = '#333333'; // Texto oscuro para fondo claro
 
 // Botones con imágenes y etiquetas para el menú de "Obra"
 const buttons = [
-  { id: 1, label: '% Compactación (Método del Cono)', route: '/CalculosCampo/Compactacion', image: require('../assets/images/LogoCalas.jpeg') },
-  { id: 2, label: '% Compactación (Método del Cono V2)', route: '/CalculosCampo/CompactacionCono', image: require('../assets/images/LogoCompactacionCono.jpg') },
-  { id: 3, label: 'Contenido de Asfalto', route: '/CalculosCampo/ContenidoAsfalto', image: require('../assets/images/LogoAsfalto.jpg') },
-];
+  { id: 1, label: '% Compactación', route: '/CalculosCampo/Compactacion', image: require('../assets/images/LogoCalas.jpeg') },
+  { id: 2, label: '% Compactación (Método del Cono)', route: '/CalculosCampo/CompactacionCono', image: require('../assets/images/LogoCompactacionCono.jpg') },
+  { id: 3, label: 'Contenido De Asfalto', route: '/CalculosCampo/ContenidoAsfalto', image: require('../assets/images/LogoAsfalto.jpg') },
+  { id: 4, label: 'Riego De Liga', route: '/CalculosCampo/RiegoLiga', image: require('../assets/images/LogoRiego.jpeg') },
+
+] as const;
 
 export default function Obra() {
   const router = useRouter();
@@ -33,8 +35,8 @@ export default function Obra() {
   }, [navigation]);
 
   // Navega según el botón presionado
-  const handlePress = (route: string) => {
-    router.push(route as any);
+  const handlePress = (route: (typeof buttons)[number]['route']) => {
+    router.push(route);
   };
 
   return (

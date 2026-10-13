@@ -58,44 +58,52 @@ export default function Granulometrias() {
     () => (net > 0 && +volume > 0 ? (net / +volume) * 1000 : 0),
     [net, volume]
   );
+  const retainedTotal = SIEVES
+    .filter(sieve => sieve.id !== 'PasaNo4')
+    .reduce((total, sieve) => total + (+retained[sieve.id] || 0), 0);
+  const calculationError = gross !== '' && tare !== '' && net <= 0
+    ? 'El peso bruto debe ser mayor que la tara.'
+    : net > 0 && retainedTotal > net
+      ? 'La suma de los pesos retenidos no puede superar el peso neto.'
+      : '';
 
   /**
    * Cálculo de filas para la tabla de resultados:
    * - Calcula peso retenido, % retenido parcial y acumulado, y % pasa.
    */
   const rows = useMemo(() => {
-    let prevPassed = 100; // % que pasa antes del primer tamiz
-    let sumRet = 0; // suma acumulada de pesos retenidos
-
-    return SIEVES.map((sieve, idx) => {
-      let pesoRetenido = 0;
-
-      if (sieve.id === 'PasaNo4') {
-        // Para el último tamiz, calcular peso retenido como resto del neto menos lo ya sumado
-        pesoRetenido = net - sumRet;
-      } else {
-        // Para tamices intermedios, obtener peso retenido del estado retained
-        pesoRetenido = +retained[sieve.id] || 0;
-        sumRet += pesoRetenido;
-      }
+    return SIEVES.reduce((acc, sieve, idx) => {
+      const pesoRetenido = sieve.id === 'PasaNo4'
+        ? net - acc.sumRet
+        : (+retained[sieve.id] || 0);
 
       // % retenido parcial respecto al peso neto
       const pctRaw = net > 0 ? (pesoRetenido / net) * 100 : 0;
       const pctRounded = Math.round(pctRaw);
 
       // % pasa es la diferencia respecto al tamiz previo
-      const passed = idx === 0 ? 100 - pctRounded : prevPassed - pctRounded;
-      prevPassed = passed;
+      const passed = idx === 0 ? 100 - pctRounded : acc.prevPassed - pctRounded;
 
       return {
-        id: sieve.id,
-        label: sieve.label,
-        peso: pesoRetenido.toFixed(2), // Usamos toFixed para consistencia
-        pct: pctRaw.toFixed(2),
-        pctRounded: pctRounded.toString(),
-        passed: passed.toString(),
+        rows: [
+          ...acc.rows,
+          {
+            id: sieve.id,
+            label: sieve.label,
+            peso: pesoRetenido.toFixed(2), // Usamos toFixed para consistencia
+            pct: pctRaw.toFixed(2),
+            pctRounded: pctRounded.toString(),
+            passed: passed.toString(),
+          },
+        ],
+        sumRet: sieve.id === 'PasaNo4' ? acc.sumRet : acc.sumRet + pesoRetenido,
+        prevPassed: passed,
       };
-    });
+    }, {
+      rows: [] as { id: string; label: string; peso: string; pct: string; pctRounded: string; passed: string }[],
+      sumRet: 0,
+      prevPassed: 100,
+    }).rows;
   }, [retained, net]);
 
   // Función para actualizar el peso retenido en un tamiz, permitiendo números y punto decimal
@@ -115,11 +123,11 @@ export default function Granulometrias() {
                 keyboardShouldPersistTaps="handled"
             >
                 {/* Título principal */}
-                <Text style={styles.title}>Cálculo de Granulometría</Text>
+                <Text style={styles.title}>Cálculo De Granulometría</Text>
 
                 {/* Tarjeta para datos de entrada */}
                 <View style={styles.card}>
-                    <Text style={styles.sectionTitle}>1. Datos de la Muestra</Text>
+                    <Text style={styles.sectionTitle}>1. Datos De La Muestra</Text>
                     <LabelledInput 
                         label="Peso Bruto (g)" 
                         value={gross} 
@@ -152,7 +160,7 @@ export default function Granulometrias() {
 
                 {/* Tarjeta para tabla de resultados */}
                 <View style={styles.cardTable}>
-                    <Text style={styles.sectionTitle}>2. Tabla de Resultados</Text>
+                    <Text style={styles.sectionTitle}>2. Tabla De Resultados</Text>
 
                     {/* Encabezado de tabla (NO MODIFICADO) */}
                     <View style={styles.tableHeader}>
@@ -162,6 +170,9 @@ export default function Granulometrias() {
                             </Text>
                         ))}
                     </View>
+                    {calculationError ? (
+                        <Text style={styles.errorText}>{calculationError}</Text>
+                    ) : null}
 
                     {/* Lista de filas de resultados (NO MODIFICADO) */}
                     {rows.map(item => (
@@ -170,7 +181,7 @@ export default function Granulometrias() {
 
                             {/* Campo editable para pesos retenidos (excepto último tamiz) */}
                             {item.id === 'PasaNo4' ? (
-                                <Text style={styles.cell}>{item.peso}</Text>
+                                <Text style={styles.cell}>{calculationError ? '—' : item.peso}</Text>
                             ) : (
                                 <TextInput
                                     style={styles.cellInput}
@@ -183,9 +194,9 @@ export default function Granulometrias() {
                             )}
 
                             {/* Mostrar porcentajes */}
-                            <Text style={styles.cell}>{item.pct}</Text>
-                            <Text style={styles.cell}>{item.pctRounded}</Text>
-                            <Text style={styles.cell}>{item.passed}</Text>
+                            <Text style={styles.cell}>{calculationError ? '—' : item.pct}</Text>
+                            <Text style={styles.cell}>{calculationError ? '—' : item.pctRounded}</Text>
+                            <Text style={styles.cell}>{calculationError ? '—' : item.passed}</Text>
                         </View>
                     ))}
                 </View>
@@ -363,6 +374,12 @@ const styles = StyleSheet.create({
     color: COLOR_TEXT_DARK, // Texto oscuro para contenido
     fontSize: 12, // Reducido ligeramente
     paddingVertical: 6,
+  },
+  errorText: {
+    color: '#D32F2F',
+    fontWeight: '600',
+    marginBottom: 8,
+    textAlign: 'center',
   },
   cellInput: {
     flex: 1,

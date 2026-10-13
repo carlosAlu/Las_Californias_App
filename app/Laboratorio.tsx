@@ -10,34 +10,56 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-// Lista de botones disponibles (sin cambios en la data)
 const BUTTONS = [
   {
     id: 1,
-    label: 'Resistencia a Compresión (Cilindros)',
-    image: require('../assets/images/LogoCilindros.jpeg'),
-  },
-  {
-    id: 2,
-    label: 'Resistencia a Flexión (Vigas)',
-    image: require('../assets/images/LogoVigas.jpeg'),
-  },
-  {
-    id: 3,
-    label: 'Resistencia a Compresión (Morteros)',
-    image: require('../assets/images/LogoMorteros.jpeg'),
-  },
-  {
-    id: 4,
     label: 'Granulometría',
+    route: '/CalculosLaboratorio/Granulometrias',
     image: require('../assets/images/LogoGranulometrias.jpeg'),
   },
   {
-    id: 5,
+    id: 2,
     label: 'Lavados',
+    route: '/CalculosLaboratorio/Lavados',
     image: require('../assets/images/LogoLavados.jpg'),
   },
-];
+  {
+    id: 3,
+    label: 'Porter',
+    route: '/CalculosLaboratorio/Porter',
+    image: require('../assets/images/LogoPorter.jpg'),
+  },
+  {
+    id: 4,
+    label: 'Proctor',
+    route: '/CalculosLaboratorio/Proctor',
+    image: require('../assets/images/LogoProctor.jpg'),
+  },
+  {
+    id: 5,
+    label: 'Resistencia A Compresión (Cilindros)',
+    route: '/CalculosLaboratorio/Cilindros',
+    image: require('../assets/images/LogoCilindros.jpeg'),
+  },
+  {
+    id: 6,
+    label: 'Resistencia A Flexión (Vigas)',
+    route: '/CalculosLaboratorio/Vigas',
+    image: require('../assets/images/LogoVigas.jpeg'),
+  },
+  {
+    id: 7,
+    label: 'Resistencia A Compresión (Morteros)',
+    route: '/CalculosLaboratorio/Morteros',
+    image: require('../assets/images/LogoMorteros.jpeg'),
+  },
+  {
+    id: 8,
+    label: 'Resistencia A Compresión (Pastillas)',
+    route: '/CalculosLaboratorio/Pastillas',
+    image: require('../assets/images/LogoPastillas.jpeg'),
+  },
+] as const;
 
 export default function LaboratorioScreen() {
   const router = useRouter();
@@ -47,20 +69,8 @@ export default function LaboratorioScreen() {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
 
-  const handlePress = (buttonIndex: number) => {
-    if (buttonIndex === 1) {
-      router.push('/CalculosLaboratorio/Cilindros');
-    } else if (buttonIndex === 2) {
-      router.push('/CalculosLaboratorio/Vigas');
-    } else if (buttonIndex === 3) {
-      router.push('/CalculosLaboratorio/Morteros');
-    } else if (buttonIndex === 4) {
-      router.push('/CalculosLaboratorio/Granulometrias');
-    } else if (buttonIndex === 5) {
-      router.push('/CalculosLaboratorio/Lavados');
-    } else {
-      console.log(`Botón ${buttonIndex} presionado`);
-    }
+  const handlePress = (route: (typeof BUTTONS)[number]['route']) => {
+    router.push(route);
   };
 
   return (
@@ -70,8 +80,8 @@ export default function LaboratorioScreen() {
           source={require('../assets/images/LogoLasCaliforniasApp.png')}
           style={styles.logo}
         />
-        <Text style={styles.title}>Módulo de Laboratorio</Text>
-        <Text style={styles.subtitle}>Selecciona la prueba a realizar</Text>
+        <Text style={styles.title}>Módulo De Laboratorio</Text>
+        <Text style={styles.subtitle}>Selecciona La Prueba A Realizar</Text>
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -80,11 +90,10 @@ export default function LaboratorioScreen() {
             <View key={btn.id} style={styles.item}>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => handlePress(btn.id)}
+                onPress={() => handlePress(btn.route)}
                 activeOpacity={0.7}
               >
-                {/* La imagen es la que tiene el 'margen' del color del botón */}
-                <Image source={btn.image} style={styles.image} /> 
+                <Image source={btn.image} style={styles.image} />
               </TouchableOpacity>
               <Text style={styles.label}>{btn.label}</Text>
             </View>
@@ -101,7 +110,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F5F5',
   },
   header: {
-    backgroundColor: '#003366', // Azul Oscuro
+    backgroundColor: '#003366',
     width: '100%',
     alignItems: 'center',
     paddingVertical: 15,
@@ -119,7 +128,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 26,
-    color: '#FFD700', // Dorado
+    color: '#FFD700',
     fontWeight: '900',
     letterSpacing: 1,
     marginTop: 5,
@@ -148,7 +157,7 @@ const styles = StyleSheet.create({
   button: {
     width: '100%',
     aspectRatio: 1,
-    backgroundColor: '#003366', 
+    backgroundColor: '#003366',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 20,

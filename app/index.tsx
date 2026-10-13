@@ -3,9 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useNavigation } from 'expo-router';
 
-// Constantes
 const LOGO_IMAGE = require('../assets/images/LogoLasCaliforniasApp.png');
-const LOGIN_ROUTE = '/Login';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -16,11 +14,6 @@ export default function HomeScreen() {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
 
-  // Maneja la navegación hacia la pantalla de inicio de sesión
-  const handleLoginPress = () => {
-    router.push(LOGIN_ROUTE);
-  };
-
   return (
     // Usamos SafeAreaView para asegurar que el contenido no se superponga con la barra de estado/notch
     <SafeAreaView style={styles.safeArea}>
@@ -29,12 +22,11 @@ export default function HomeScreen() {
         <View style={styles.header}>
           <Image source={LOGO_IMAGE} style={styles.logo} />
           <Text style={styles.welcomeTitle}>¡Bienvenido!</Text>
-          <Text style={styles.welcomeSubtitle}>Descubre todo lo que tenemos para ti.</Text>
         </View>
 
         {/* Sección del Botón */}
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={handleLoginPress}>
+          <TouchableOpacity style={styles.button} onPress={() => router.replace('/MenuPrincipal')}>
             <Text style={styles.buttonText}>Comenzar</Text>
           </TouchableOpacity>
         </View>

@@ -69,39 +69,49 @@ export default function ContenidoAsfalto() {
     () => (net > 0 && +volume > 0 ? (net / +volume) * 1000 : 0),
     [net, volume]
   );
+  const retainedTotal = SIEVES
+    .filter(sieve => sieve.id !== 'PasaNo4')
+    .reduce((total, sieve) => total + (+retained[sieve.id] || 0), 0);
+  const calculationError = gross !== '' && tare !== '' && net <= 0
+    ? 'El peso bruto debe ser mayor que la tara.'
+    : net > 0 && retainedTotal > net
+      ? 'La suma de los pesos retenidos no puede superar el peso neto.'
+      : '';
 
   // Generar filas para la tabla con cálculos de peso retenido y porcentajes
   const rows = useMemo(() => {
-    let prevPassed = 100;
-    let sumRet = 0;
-
-    return SIEVES.map((sieve, idx) => {
-      let w = 0;
-      if (sieve.id === 'PasaNo4') {
-        // Peso retenido en la última malla es la diferencia restante
-        w = net - sumRet;
-      } else {
-        w = +retained[sieve.id] || 0;
-        sumRet += w;
-      }
+    return SIEVES.reduce((acc, sieve, idx) => {
+      const w = sieve.id === 'PasaNo4'
+        ? net - acc.sumRet
+        : (+retained[sieve.id] || 0);
 
       // % retenido parcial basado en peso neto
       const pctRaw = net > 0 ? (w / net) * 100 : 0;
       const pctRounded = Math.round(pctRaw);
 
       // % pasa calculado como diferencia acumulada de retenidos
-      const passed = idx === 0 ? 100 - pctRounded : prevPassed - pctRounded;
-      prevPassed = passed;
+      const passed = idx === 0 ? 100 - pctRounded : acc.prevPassed - pctRounded;
 
       return {
-        id: sieve.id,
-        label: sieve.label,
-        peso: w.toFixed(2), // Usamos toFixed para consistencia
-        pct: pctRaw.toFixed(2),
-        pctRounded: pctRounded.toString(),
-        passed: passed.toString(),
+        rows: [
+          ...acc.rows,
+          {
+            id: sieve.id,
+            label: sieve.label,
+            peso: w.toFixed(2), // Usamos toFixed para consistencia
+            pct: pctRaw.toFixed(2),
+            pctRounded: pctRounded.toString(),
+            passed: passed.toString(),
+          },
+        ],
+        sumRet: sieve.id === 'PasaNo4' ? acc.sumRet : acc.sumRet + w,
+        prevPassed: passed,
       };
-    });
+    }, {
+      rows: [] as { id: string; label: string; peso: string; pct: string; pctRounded: string; passed: string }[],
+      sumRet: 0,
+      prevPassed: 100,
+    }).rows;
   }, [retained, net]);
 
   // Función para manejar cambios en los pesos retenidos, solo números y decimales
@@ -166,13 +176,18 @@ export default function ContenidoAsfalto() {
                         </Text>
                     ))}
                 </View>
+                {calculationError ? (
+                    <Text style={styles.errorText}>{calculationError}</Text>
+                ) : null}
                 {/* Lista de filas de resultados */}
                 {rows.map(item => (
                     <View key={item.id} style={[styles.row, item.id === 'PasaNo4' && styles.rowFinal]}>
                         <Text style={[styles.cell, item.id === 'PasaNo4' && styles.finalLabel]}>{item.label}</Text>
                         
                         {item.id === 'PasaNo4' ? (
-                            <Text style={[styles.cell, styles.cellCalculated]}>{item.peso}</Text>
+                            <Text style={[styles.cell, styles.cellCalculated]}>
+                                {calculationError ? '—' : item.peso}
+                            </Text>
                         ) : (
                             <TextInput
                                 style={styles.cellInput}
@@ -184,9 +199,9 @@ export default function ContenidoAsfalto() {
                                 placeholder="0.00"
                             />
                         )}
-                        <Text style={[styles.cell, styles.cellResult]}>{item.pct}</Text>
-                        <Text style={[styles.cell, styles.cellResult]}>{item.pctRounded}</Text>
-                        <Text style={[styles.cell, styles.cellResultFinal]}>{item.passed}</Text>
+                        <Text style={[styles.cell, styles.cellResult]}>{calculationError ? '—' : item.pct}</Text>
+                        <Text style={[styles.cell, styles.cellResult]}>{calculationError ? '—' : item.pctRounded}</Text>
+                        <Text style={[styles.cell, styles.cellResultFinal]}>{calculationError ? '—' : item.passed}</Text>
                     </View>
                 ))}
             </View>
@@ -400,6 +415,12 @@ const styles = StyleSheet.create({
   cellResultFinal: {
     color: COLOR_PRIMARY, // Dorado para la columna de % Pasa final
     fontWeight: '700',
+  },
+  errorText: {
+    color: '#D32F2F',
+    fontWeight: '600',
+    marginBottom: 8,
+    textAlign: 'center',
   },
   finalLabel: {
     fontWeight: 'bold',

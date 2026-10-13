@@ -46,12 +46,12 @@ export default function Cilindros() {
     setArea(null);
 
     // Parsear valores de texto a números flotantes
-    const d = parseFloat(diametro);
-    const c = parseFloat(carga);
-    const fcValue = parseFloat(fc);
+    const d = Number(diametro);
+    const c = Number(carga);
+    const fcValue = Number(fc);
 
     // Validar que los valores sean números y mayores que cero
-    if (isNaN(d) || isNaN(c) || isNaN(fcValue) || d <= 0 || c <= 0 || fcValue <= 0) {
+    if (![d, c, fcValue].every(Number.isFinite) || d <= 0 || c <= 0 || fcValue <= 0) {
       // Modificado para mostrar la unidad en el error (resistencia debería ser un porcentaje)
       setError('Por favor ingresa valores válidos y mayores a cero.');
       return;
@@ -88,11 +88,11 @@ export default function Cilindros() {
           keyboardShouldPersistTaps="handled"
         >
           {/* Título principal con estilo de marca */}
-          <Text style={styles.title}>Cálculo de Resistencia de Cilindros</Text>
+          <Text style={styles.title}>Cálculo Resistencia De Cilindros</Text>
 
           {/* Sección para ingresar datos (Tarjeta de Entradas) */}
           <View style={styles.card}>
-            <Text style={styles.sectionTitle}>1. Datos de Entrada</Text>
+            <Text style={styles.sectionTitle}>1. Datos De Entrada</Text>
             {/* Campos de entrada personalizados */}
             <CustomInput label="Diámetro (cm)" value={diametro} setValue={setDiametro} />
             <CustomInput label="Carga (kg)" value={carga} setValue={setCarga} />
@@ -126,9 +126,9 @@ export default function Cilindros() {
                 {resistencia !== null && (
                   <>
                     <View style={styles.resultRow}>
-                        <Text style={styles.resultLabel}>Resistencia (f'c):</Text>
+                        <Text style={styles.resultLabel}>Resistencia (f&apos;c):</Text>
                         <Text style={styles.resultValueMajor}>
-                            {area ? (parseFloat(carga) / area).toFixed(2) : '0'} kgf/cm²
+                            {area ? (Number(carga) / area).toFixed(2) : '0'} kgf/cm²
                         </Text>
                     </View>
                     <View style={[styles.resultRow, styles.finalResultRow]}>

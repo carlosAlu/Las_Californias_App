@@ -39,8 +39,6 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      "expo-sqlite",
-      "expo-media-library",
       "expo-font",
       "expo-image",
       "expo-status-bar",

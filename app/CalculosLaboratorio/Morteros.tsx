@@ -51,13 +51,13 @@ export default function Morteros() {
     setError('');
     setResistencia(null);
 
-    const cargaNum = parseFloat(carga);
-    const fcNum = parseFloat(fc);
+    const cargaNum = Number(carga);
+    const fcNum = Number(fc);
     
     // Área de la pastilla de mortero (asumo 5cm x 5cm = 25 cm²)
     const areaConstante = 25; 
 
-    if (isNaN(cargaNum) || isNaN(fcNum) || cargaNum <= 0 || fcNum <= 0) {
+    if (![cargaNum, fcNum].every(Number.isFinite) || cargaNum <= 0 || fcNum <= 0) {
       setError('Por favor ingresa valores válidos y mayores a cero.');
       return;
     }
@@ -89,11 +89,11 @@ export default function Morteros() {
           keyboardShouldPersistTaps="handled"
         >
           {/* Título principal con estilo de marca */}
-          <Text style={styles.title}>Cálculo de Resistencia de Morteros</Text>
+          <Text style={styles.title}>Cálculo Resistencia de Morteros</Text>
           
           {/* Tarjeta de Entrada de Datos */}
           <View style={styles.card}>
-            <Text style={styles.sectionTitle}>1. Datos de Entrada</Text>
+            <Text style={styles.sectionTitle}>1. Datos De Entrada</Text>
             
             {/* Input personalizado con mejor etiqueta */}
             <CustomInput label="Carga Máxima (kg)" value={carga} setValue={setCarga} />
@@ -118,9 +118,9 @@ export default function Morteros() {
                 <>
                    {/* Mostramos la Resistencia Simple (Carga / Área) */}
                    <View style={styles.resultRow}>
-                        <Text style={styles.resultLabel}>Resistencia Simple (f'c):</Text>
+                        <Text style={styles.resultLabel}>Resistencia Simple (f&apos;c):</Text>
                         <Text style={styles.resultValueMajor}>
-                           {(parseFloat(carga) / 25).toFixed(2)} kgf/cm²
+                           {(Number(carga) / 25).toFixed(2)} kgf/cm²
                         </Text>
                     </View>
                     {/* Mostramos el Porcentaje de Resistencia Obtenida */}

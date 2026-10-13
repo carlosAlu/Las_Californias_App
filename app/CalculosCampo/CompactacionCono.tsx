@@ -73,24 +73,22 @@ export default function CompactacionCono() {
     setCompactacion(null);
 
     // Parsear valores ingresados a números
-    const v1 = parseFloat(arenaInicial);
-    const v2 = parseFloat(arenaSobrante);
-    const v3 = parseFloat(materialHumedo);
-    const v4 = parseFloat(volArena);
-    const v5 = parseFloat(humedad);
-    const v6 = parseFloat(volMax);
+    const v1 = Number(arenaInicial);
+    const v2 = Number(arenaSobrante);
+    const v3 = Number(materialHumedo);
+    const v4 = Number(volArena);
+    const v5 = Number(humedad);
+    const v6 = Number(volMax);
 
-    // Validar que los valores sean números válidos y positivos
     if (
-      isNaN(v1) || isNaN(v2) || isNaN(v3) ||
-      isNaN(v4) || isNaN(v5) || isNaN(v6) ||
-      v4 <= 0 || v6 <= 0
+      ![v1, v2, v3, v4, v5, v6].every(Number.isFinite) ||
+      v1 <= 0 || v2 < 0 || v3 <= 0 || v4 <= 0 || v5 < 0 || v6 <= 0
     ) {
-          const mensaje = 'Por favor ingresa valores válidos y positivos en todos los campos requeridos.';
-          setError(mensaje);
-          Alert.alert('Error',mensaje)
-          return;
-        }
+      const mensaje = 'Ingresa valores válidos: los pesos, volúmenes y la humedad no pueden ser negativos.';
+      setError(mensaje);
+      Alert.alert('Error', mensaje);
+      return;
+    }
     // --- CÁLCULOS ---
     
     // 1. Peso utilizado de arena: P_arena = P_inicial - P_sobrante
