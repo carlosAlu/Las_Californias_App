@@ -1,5 +1,4 @@
-import { useNavigation } from 'expo-router';
-import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -10,6 +9,7 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { CalculatorInput } from '../../components/CalculatorFields';
 
 // *** CONSTANTES DE MARCA (Para consistencia) ***
 const COLOR_PRIMARY = '#003366'; // Azul Oscuro de Marca
@@ -35,12 +35,6 @@ export default function Lavados() {
   );
 
   const scrollRef = useRef<ScrollView>(null);
-  const navigation = useNavigation();
-
-  useLayoutEffect(() => {
-    navigation.setOptions({ headerShown: false });
-  }, [navigation]);
-
   // Calcular el valor de "Pasa 200" automáticamente
   const autoRetained = useMemo<Record<string, string>>(() => {
     const sum = SIEVES
@@ -189,19 +183,15 @@ function LabelledInput({
   placeholder: string;
 }) {
   return (
-    <View style={styles.inputGroup}>
-      <Text style={styles.inputLabel}>{label}</Text>
-      <TextInput
-        style={styles.input}
-        keyboardType="decimal-pad"
-        inputMode="decimal"
-        value={value}
-        onChangeText={onChange}
-        placeholder={placeholder}
-        placeholderTextColor="#999"
-        returnKeyType="done"
-      />
-    </View>
+    <CalculatorInput
+      label={label}
+      value={value}
+      onChangeText={onChange}
+      keyboardType="decimal-pad"
+      inputMode="decimal"
+      placeholder={placeholder}
+      styles={styles}
+    />
   );
 }
 

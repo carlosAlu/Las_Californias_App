@@ -1,16 +1,15 @@
-import { useNavigation } from 'expo-router';
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { CalculatorInput } from '../../components/CalculatorFields';
 
 // *** CONSTANTES DE MARCA ***
 const COLOR_PRIMARY = '#003366'; // Azul Oscuro de Marca
@@ -29,11 +28,6 @@ export default function Cilindros() {
   const [error, setError] = useState('');
 
   const scrollRef = useRef<ScrollView>(null);
-
-  const navigation = useNavigation();
-  useLayoutEffect(() => {
-    navigation.setOptions({ headerShown: false });
-  }, [navigation]);
 
   /**
    * Función para validar entradas, calcular área y resistencia,
@@ -161,20 +155,13 @@ function CustomInput({
   setValue: (v: string) => void;
 }) {
   return (
-    <View style={styles.inputGroup}>
-      {/* Etiqueta del campo */}
-      <Text style={styles.inputLabel}>{label}</Text>
-      {/* Entrada numérica */}
-      <TextInput
-        style={styles.input}
-        value={value}
-        onChangeText={setValue}
-        keyboardType="numeric"
-        placeholder={`Ej: ${label.includes('f\'c') ? '210' : '15.2'}`} // Placeholders más útiles
-        placeholderTextColor="#999"
-        returnKeyType="done"
-      />
-    </View>
+    <CalculatorInput
+      label={label}
+      value={value}
+      onChangeText={setValue}
+      placeholder={`Ej: ${label.includes("f'c") ? '210' : '15.2'}`}
+      styles={styles}
+    />
   );
 }
 

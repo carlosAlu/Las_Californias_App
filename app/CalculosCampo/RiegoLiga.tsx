@@ -1,16 +1,15 @@
-import { useNavigation } from 'expo-router';
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { CalculatorInput, CalculatorResultRow } from '../../components/CalculatorFields';
 
 // *** CONSTANTES DE MARCA ***
 const COLOR_PRIMARY = '#003366'; // Azul Oscuro de Marca
@@ -35,11 +34,6 @@ export default function RiegoLiga() {
   const [error, setError] = useState('');
 
   const scrollRef = useRef<ScrollView>(null);
-
-  const navigation = useNavigation();
-  useLayoutEffect(() => {
-    navigation.setOptions({ headerShown: false });
-  }, [navigation]);
 
   const handleCalcular = () => {
     setError('');
@@ -170,28 +164,18 @@ function CustomInput({
   placeholder: string;
 }) {
   return (
-    <View style={styles.inputGroup}>
-      <Text style={styles.inputLabel}>{label}</Text>
-      <TextInput
-        style={styles.input}
-        value={value}
-        onChangeText={setValue}
-        keyboardType="numeric"
-        placeholder={placeholder}
-        placeholderTextColor="#999"
-        returnKeyType="done"
-      />
-    </View>
+    <CalculatorInput
+      label={label}
+      value={value}
+      onChangeText={setValue}
+      placeholder={placeholder}
+      styles={styles}
+    />
   );
 }
 
 function ResultRow({ label, value }: { label: string; value: string }) {
-  return (
-    <View style={styles.resultRow}>
-      <Text style={styles.resultLabel}>{label}</Text>
-      <Text style={styles.resultValue}>{value}</Text>
-    </View>
-  );
+  return <CalculatorResultRow label={label} value={value} styles={styles} />;
 }
 
 // =========================================================================

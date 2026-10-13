@@ -1,5 +1,4 @@
-import { useNavigation } from 'expo-router';
-import React, { useState, useMemo, useRef, useLayoutEffect } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import {
   View,
   Text,
@@ -10,6 +9,7 @@ import {
   Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { CalculatorInput } from '../../components/CalculatorFields';
 
 // *** CONSTANTES DE MARCA (Para consistencia) ***
 const COLOR_PRIMARY = '#003366'; // Azul Oscuro de Marca
@@ -43,12 +43,6 @@ export default function Granulometrias() {
 
   // Referencia para el scroll del ScrollView
   const scrollRef = useRef<ScrollView>(null);
-
-  // Hook para ocultar el header de navegación en esta pantalla
-  const navigation = useNavigation();
-  useLayoutEffect(() => {
-    navigation.setOptions({ headerShown: false });
-  }, [navigation]);
 
   // Peso neto = bruto - tara, recalculado cuando cambian bruto o tara
   const net = useMemo(() => (+gross || 0) - (+tare || 0), [gross, tare]);
@@ -221,18 +215,14 @@ function LabelledInput({
   placeholder: string;
 }) {
   return (
-    <View style={styles.inputGroup}>
-      <Text style={styles.inputLabel}>{label}</Text>
-      <TextInput
-        style={styles.input}
-        keyboardType="numeric"
-        value={value}
-        onChangeText={t => onChange(t.replace(/[^\d.]/g, ''))}
-        placeholder={placeholder}
-        placeholderTextColor="#999"
-        returnKeyType="done"
-      />
-    </View>
+    <CalculatorInput
+      label={label}
+      value={value}
+      onChangeText={onChange}
+      sanitizeInput={text => text.replace(/[^\d.]/g, '')}
+      placeholder={placeholder}
+      styles={styles}
+    />
   );
 }
 

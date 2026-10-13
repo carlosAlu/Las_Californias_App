@@ -1,5 +1,4 @@
-import { useNavigation } from 'expo-router';
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Alert,
   KeyboardAvoidingView,
@@ -7,11 +6,11 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { CalculatorInput, CalculatorResultRow } from '../../components/CalculatorFields';
 
 // *** CONSTANTES DE MARCA ***
 const COLOR_PRIMARY = '#003366'; // Azul Oscuro de Marca
@@ -43,11 +42,6 @@ export default function CompactacionCono() {
   const scrollRef = useRef<ScrollView>(null);
 
   // Navegación para ocultar el header de la pantalla
-  const navigation = useNavigation();
-  useLayoutEffect(() => {
-    navigation.setOptions({ headerShown: false });
-  }, [navigation]);
-
   // Función para sanitizar la entrada (permite números y punto decimal)
   const cleanDecimalInput = (text: string) => {
     let clean = text.replace(/[^0-9.]/g, '');
@@ -194,32 +188,27 @@ export default function CompactacionCono() {
 // Componente reutilizable para inputs con etiqueta
 function CustomInput({ label, value, setValue, cleanInput }: { label: string, value: string, setValue: (v: string) => void, cleanInput: (t: string) => string }) {
   return (
-    <View style={styles.inputGroup}>
-      <Text style={styles.inputLabel}>{label}</Text>
-      <TextInput
-        style={styles.input}
-        value={value}
-        onChangeText={text => setValue(cleanInput(text))}
-        keyboardType="numeric"
-        placeholder={`Ingrese el valor`}
-        placeholderTextColor="#999"
-        returnKeyType="done"
-      />
-    </View>
+    <CalculatorInput
+      label={label}
+      value={value}
+      onChangeText={setValue}
+      sanitizeInput={cleanInput}
+      styles={styles}
+    />
   );
 }
 
 // Componente para mostrar filas de resultados (reutilizado)
 function ResultRow({ label, value, units = '', decimalPlaces = 2 }: { label: string, value: number | null, units?: string, decimalPlaces?: number }) {
-    if (value === null) return null;
-    return (
-        <View style={styles.resultRow}>
-            <Text style={styles.resultLabel}>{label}</Text>
-            <Text style={styles.resultValue}>
-                {value.toFixed(decimalPlaces)} {units}
-            </Text>
-        </View>
-    );
+  return (
+    <CalculatorResultRow
+      label={label}
+      value={value}
+      units={units}
+      decimalPlaces={decimalPlaces}
+      styles={styles}
+    />
+  );
 }
 
 const styles = StyleSheet.create({

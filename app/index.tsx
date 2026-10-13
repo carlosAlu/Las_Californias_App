@@ -1,30 +1,20 @@
-import React, { useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { useRouter } from 'expo-router';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter, useNavigation } from 'expo-router';
 
 const LOGO_IMAGE = require('../assets/images/LogoLasCaliforniasApp.png');
 
 export default function HomeScreen() {
   const router = useRouter();
-  const navigation = useNavigation();
-
-  // Oculta el header de navegación al cargar el componente
-  useLayoutEffect(() => {
-    navigation.setOptions({ headerShown: false });
-  }, [navigation]);
 
   return (
-    // Usamos SafeAreaView para asegurar que el contenido no se superponga con la barra de estado/notch
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        {/* Sección de Logo y Bienvenida */}
         <View style={styles.header}>
           <Image source={LOGO_IMAGE} style={styles.logo} />
           <Text style={styles.welcomeTitle}>¡Bienvenido!</Text>
         </View>
 
-        {/* Sección del Botón */}
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={() => router.replace('/MenuPrincipal')}>
             <Text style={styles.buttonText}>Comenzar</Text>
@@ -35,15 +25,14 @@ export default function HomeScreen() {
   );
 }
 
-// Estilos
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#003366', // Un azul marino más profundo y elegante como fondo principal
+    backgroundColor: '#003366',
   },
   container: {
     flex: 1,
-    justifyContent: 'space-around', // Distribuye el espacio entre el logo y el botón
+    justifyContent: 'space-around',
     alignItems: 'center',
     padding: 30,
   },
@@ -56,7 +45,6 @@ const styles = StyleSheet.create({
     height: 250,
     resizeMode: 'contain',
     marginBottom: 20,
-
   },
   welcomeTitle: {
     fontSize: 42,
@@ -67,16 +55,10 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: -1, height: 1 },
     textShadowRadius: 10,
   },
-  welcomeSubtitle: {
-    fontSize: 18,
-    color: '#B0C4DE',
-    textAlign: 'center',
-    maxWidth: 300,
-  },
   buttonContainer: {
     width: '100%',
     alignItems: 'center',
-    marginBottom: 50, 
+    marginBottom: 50,
   },
   button: {
     backgroundColor: '#FFD700',

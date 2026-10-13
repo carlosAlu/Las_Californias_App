@@ -1,16 +1,15 @@
-import { useNavigation } from 'expo-router';
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { CalculatorInput } from '../../components/CalculatorFields';
 
 // *** CONSTANTES DE MARCA ***
 const COLOR_PRIMARY = '#003366'; // Azul Oscuro de Marca
@@ -27,11 +26,6 @@ export default function Vigas() {
   const [tipo, setTipo] = useState<'centro' | 'lateral'>('centro');
 
   const scrollRef = useRef<ScrollView>(null);
-  const navigation = useNavigation();
-
-  useLayoutEffect(() => {
-    navigation.setOptions({ headerShown: false });
-  }, [navigation]);
 
   // Función que se ejecuta al presionar el botón Calcular
   const handleCalcular = () => {
@@ -172,18 +166,13 @@ function CustomInput({
   setValue: (v: string) => void;
 }) {
   return (
-    <View style={styles.inputGroup}>
-      <Text style={styles.inputLabel}>{label}</Text>
-      <TextInput
-        style={styles.input}
-        value={value}
-        onChangeText={setValue}
-        keyboardType="numeric"
-        placeholder={`Ej: 3000`} // Placeholder más útil
-        placeholderTextColor="#999"
-        returnKeyType="done"
-      />
-    </View>
+    <CalculatorInput
+      label={label}
+      value={value}
+      onChangeText={setValue}
+      placeholder="Ej: 3000"
+      styles={styles}
+    />
   );
 }
 

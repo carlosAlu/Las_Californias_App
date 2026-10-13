@@ -1,5 +1,4 @@
-import { useNavigation } from 'expo-router';
-import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -10,6 +9,7 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { CalculatorInput } from '../../components/CalculatorFields';
 
 // *** CONSTANTES DE MARCA (Para consistencia) ***
 const COLOR_PRIMARY = '#003366'; // Azul Oscuro de Marca
@@ -44,13 +44,6 @@ export default function ContenidoAsfalto() {
 
   // Referencia para el ScrollView
   const scrollRef = useRef<ScrollView>(null);
-  const navigation = useNavigation();
-
-  // Ocultar header en la navegación
-  useLayoutEffect(() => {
-    navigation.setOptions({ headerShown: false });
-  }, [navigation]);
-
   // Función para sanitizar la entrada (permite números y punto decimal)
   const cleanDecimalInput = (text: string) => {
     let clean = text.replace(/[^0-9.]/g, '');
@@ -228,18 +221,14 @@ function LabelledInput({
   cleanInput: (t: string) => string;
 }) {
   return (
-    <View style={styles.inputGroup}>
-      <Text style={styles.inputLabel}>{label}</Text>
-      <TextInput
-        style={styles.input}
-        keyboardType="numeric"
-        value={value}
-        onChangeText={t => onChange(cleanInput(t))} // Usa la función de limpieza
-        placeholder={placeholder}
-        placeholderTextColor="#999"
-        returnKeyType="done"
-      />
-    </View>
+    <CalculatorInput
+      label={label}
+      value={value}
+      onChangeText={onChange}
+      sanitizeInput={cleanInput}
+      placeholder={placeholder}
+      styles={styles}
+    />
   );
 }
 

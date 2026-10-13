@@ -1,16 +1,15 @@
-import { useNavigation } from 'expo-router';
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { CalculatorInput } from '../../components/CalculatorFields';
 
 // *** CONSTANTES DE MARCA (Para consistencia) ***
 const COLOR_PRIMARY = '#003366'; // Azul Oscuro de Marca
@@ -39,11 +38,6 @@ export default function Morteros() {
   const scrollRef = useRef<ScrollView>(null);
 
   // Hook para ocultar header de navegación
-  const navigation = useNavigation();
-  useLayoutEffect(() => {
-    navigation.setOptions({ headerShown: false });
-  }, [navigation]);
-
   /**
    * Función que valida entradas y calcula la resistencia
    */
@@ -153,18 +147,13 @@ function CustomInput({
   setValue: (v: string) => void;
 }) {
   return (
-    <View style={styles.inputGroup}>
-      <Text style={styles.inputLabel}>{label}</Text>
-      <TextInput
-        style={styles.input}
-        value={value}
-        onChangeText={setValue}
-        keyboardType="numeric"
-        placeholder={`Ej: ${label.includes('f\'c') ? '150' : '3800'}`} // Placeholders útiles
-        placeholderTextColor="#999"
-        returnKeyType="done"
-      />
-    </View>
+    <CalculatorInput
+      label={label}
+      value={value}
+      onChangeText={setValue}
+      placeholder={`Ej: ${label.includes("f'c") ? '150' : '3800'}`}
+      styles={styles}
+    />
   );
 }
 

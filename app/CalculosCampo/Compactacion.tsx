@@ -1,5 +1,4 @@
-import { useNavigation } from 'expo-router';
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Alert,
   KeyboardAvoidingView,
@@ -7,11 +6,11 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { CalculatorInput, CalculatorResultRow } from '../../components/CalculatorFields';
 
 // *** CONSTANTES DE MARCA ***
 const COLOR_PRIMARY = '#003366'; // Azul Oscuro de Marca
@@ -44,13 +43,6 @@ export default function Compactacion() {
   // Referencia para hacer scroll automático al final
   const scrollRef = useRef<ScrollView>(null);
   // Hook para controlar la navegación y ocultar header
-  const navigation = useNavigation();
-
-  // Oculta el header al montar el componente
-  useLayoutEffect(() => {
-    navigation.setOptions({ headerShown: false });
-  }, [navigation]);
-  
   // Función para sanitizar la entrada (permite números y punto decimal)
   const cleanDecimalInput = (text: string) => {
     let clean = text.replace(/[^0-9.]/g, '');
@@ -137,11 +129,11 @@ export default function Compactacion() {
         >
         {/* ScrollView principal con ref para scroll automático */}
         <ScrollView ref={scrollRef} contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-            <Text style={styles.title}>Cálculo de Grado de Compactación</Text>
+            <Text style={styles.title}>Cálculo Grado De Compactación</Text>
             
             {/* Tarjeta de Entrada de Datos */}
             <View style={styles.card}>
-                <Text style={styles.sectionTitle}>1. Datos de Entrada</Text>
+                <Text style={styles.sectionTitle}>1. Datos De Entrada</Text>
                 {/* Inputs para todos los valores necesarios */}
                 <CustomInput label="Peso de arena inicial (g)" value={arenaInicial} setValue={setArenaInicial} cleanInput={cleanDecimalInput}/>
                 <CustomInput label="Peso sobrante de arena (g)" value={arenaSobrante} setValue={setArenaSobrante} cleanInput={cleanDecimalInput}/>
@@ -194,32 +186,27 @@ export default function Compactacion() {
 // Componente reutilizable para inputs con etiqueta
 function CustomInput({ label, value, setValue, cleanInput }: { label: string, value: string, setValue: (v: string) => void, cleanInput: (t: string) => string }) {
   return (
-    <View style={styles.inputGroup}>
-      <Text style={styles.inputLabel}>{label}</Text>
-      <TextInput
-        style={styles.input}
-        value={value}
-        onChangeText={text => setValue(cleanInput(text))}
-        keyboardType="numeric"
-        placeholder={`Ingrese el valor`}
-        placeholderTextColor="#999"
-        returnKeyType="done"
-      />
-    </View>
+    <CalculatorInput
+      label={label}
+      value={value}
+      onChangeText={setValue}
+      sanitizeInput={cleanInput}
+      styles={styles}
+    />
   );
 }
 
 // Nuevo componente para mostrar filas de resultados
 function ResultRow({ label, value, units = '', decimalPlaces = 2 }: { label: string, value: number | null, units?: string, decimalPlaces?: number }) {
-    if (value === null) return null;
-    return (
-        <View style={styles.resultRow}>
-            <Text style={styles.resultLabel}>{label}</Text>
-            <Text style={styles.resultValue}>
-                {value.toFixed(decimalPlaces)} {units}
-            </Text>
-        </View>
-    );
+  return (
+    <CalculatorResultRow
+      label={label}
+      value={value}
+      units={units}
+      decimalPlaces={decimalPlaces}
+      styles={styles}
+    />
+  );
 }
 
 // Estilos para los componentes
