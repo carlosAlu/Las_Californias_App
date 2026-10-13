@@ -7,7 +7,6 @@
     "icon": "./assets/images/icon.png",
     "scheme": "lascaliforniasapp",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
       "runtimeVersion": {
@@ -19,7 +18,6 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true,
       "package": "com.cjimenez_20.LasCaliforniasApp",
       "runtimeVersion": "1.0.0"
     },
