@@ -26,7 +26,7 @@ export default function HomeScreen() {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => router.replace('/MenuPrincipal')}
+            onPress={() => router.push('/MenuPrincipal')}
             activeOpacity={0.82}
             accessibilityRole="button"
           >

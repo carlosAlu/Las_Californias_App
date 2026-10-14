@@ -37,7 +37,7 @@ export default function Index() {
       }}
     >
       <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="MenuPrincipal" options={{ headerShown: false }} />
+      <Stack.Screen name="MenuPrincipal" options={{ headerShown: true }} />
     </Stack>
   );
 }
