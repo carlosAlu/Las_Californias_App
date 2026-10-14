@@ -1,6 +1,7 @@
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { BackHandler, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 import { ModuleMenu } from '../components/ModuleMenu';
 import type { ModuleMenuItem } from '../components/ModuleMenu';
@@ -41,38 +42,68 @@ export default function MenuPrincipalScreen() {
       subtitle="Elige el área de trabajo"
       items={MENU_ITEMS}
       footer={
-        <Modal
-          visible={backModalVisible}
-          transparent
-          animationType="fade"
-          onRequestClose={() => setBackModalVisible(false)}
-        >
-          <View style={styles.modalOverlay}>
-            <View style={styles.modalContent}>
-              <Text style={styles.modalTitle}>¿Salir de la aplicación?</Text>
-              <View style={styles.modalRow}>
-                <TouchableOpacity
-                  style={[styles.modalButton, styles.cancelButton]}
-                  onPress={() => setBackModalVisible(false)}
-                >
-                  <Text style={styles.modalButtonText}>CANCELAR</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.modalButton, styles.exitButton]}
-                  onPress={() => BackHandler.exitApp()}
-                >
-                  <Text style={styles.modalButtonText}>SALIR</Text>
-                </TouchableOpacity>
+        <View style={styles.footer}>
+          <TouchableOpacity
+            style={styles.exitMenuButton}
+            onPress={() => setBackModalVisible(true)}
+            activeOpacity={0.82}
+            accessibilityRole="button"
+            accessibilityLabel="Salir de la aplicación"
+          >
+            <Ionicons name="exit-outline" size={20} color={colors.white} />
+            <Text style={styles.exitMenuButtonText}>Salir de la aplicación</Text>
+          </TouchableOpacity>
+          <Modal
+            visible={backModalVisible}
+            transparent
+            animationType="fade"
+            onRequestClose={() => setBackModalVisible(false)}
+          >
+            <View style={styles.modalOverlay}>
+              <View style={styles.modalContent}>
+                <Text style={styles.modalTitle}>¿Salir de la aplicación?</Text>
+                <View style={styles.modalRow}>
+                  <TouchableOpacity
+                    style={[styles.modalButton, styles.cancelButton]}
+                    onPress={() => setBackModalVisible(false)}
+                  >
+                    <Text style={styles.modalButtonText}>CANCELAR</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.modalButton, styles.exitButton]}
+                    onPress={() => BackHandler.exitApp()}
+                  >
+                    <Text style={styles.modalButtonText}>SALIR</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
-          </View>
-        </Modal>
+          </Modal>
+        </View>
       }
     />
   );
 }
 
 const styles = StyleSheet.create({
+  footer: {
+    paddingHorizontal: 18,
+    paddingBottom: 18,
+  },
+  exitMenuButton: {
+    minHeight: 50,
+    backgroundColor: '#D32F2F',
+    borderRadius: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+  },
+  exitMenuButtonText: {
+    color: colors.white,
+    fontSize: 16,
+    fontWeight: '700',
+  },
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(22, 37, 32, 0.58)',
