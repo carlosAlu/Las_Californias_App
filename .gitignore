@@ -29,8 +29,7 @@ yarn-error.*
 # macOS
 .DS_Store
 *.pem
-/android
-# local env files
+/android/# local env files
 .env*.local
 
 # typescript
