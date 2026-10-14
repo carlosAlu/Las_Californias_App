@@ -12,10 +12,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { CalculatorInput, CalculatorResultRow } from '../../components/CalculatorFields';
 
 // *** CONSTANTES DE MARCA ***
-const COLOR_PRIMARY = '#003366'; // Azul Oscuro de Marca
-const COLOR_ACCENT = '#FFD700'; // Dorado/Amarillo de Contraste
-const COLOR_BACKGROUND = '#F5F5F5'; // Fondo Suave
-const COLOR_ERROR = '#D32F2F'; // Rojo de Error
+const COLOR_PRIMARY = '#24584D';
+const COLOR_ACCENT = '#D98555';
+const COLOR_BACKGROUND = '#F4F2EC';
+const COLOR_ERROR = '#B84A42';
 const LITERS_PER_GALLON = 3.78541;
 
 export default function RiegoLiga() {
@@ -90,7 +90,7 @@ export default function RiegoLiga() {
           contentContainerStyle={styles.container}
           keyboardShouldPersistTaps="handled"
         >
-          <Text style={styles.title}>Cálculo Riego De Liga</Text>
+          <Text style={styles.title}>Cálculo Dosificación Real De Liga</Text>
 
           <View style={styles.card}>
             <Text style={styles.sectionTitle}>1. Datos De Entrada</Text>
@@ -265,14 +265,14 @@ const styles = StyleSheet.create({
     fontSize: 17,
     textAlign: 'left', // Alineación a la izquierda para facilidad de ingreso
     borderWidth: 2,
-    borderColor: '#E0E0E0', // Borde gris claro sutil
+    borderColor: '#DDDCD3',
     fontWeight: '500',
   },
   // Modificado: El botón usa el color dorado (COLOR_ACCENT) y texto azul (COLOR_PRIMARY)
   button: {
     // backgroundColor: COLOR_PRIMARY, // Esto se sobrescribe inline para usar COLOR_ACCENT
     paddingVertical: 14,
-    borderRadius: 30, // Más redondeado (pastilla)
+    borderRadius: 16,
     marginTop: 15,
     alignItems: 'center',
     shadowColor: '#000',
@@ -309,7 +309,7 @@ const styles = StyleSheet.create({
   },
   // Nuevo: Etiqueta de resultado (texto normal)
   resultLabel: {
-    color: '#333333',
+    color: '#26332F',
     fontSize: 16,
     fontWeight: '500',
   },

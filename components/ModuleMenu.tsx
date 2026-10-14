@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import type { Href } from 'expo-router';
 import type { ReactNode } from 'react';
@@ -11,6 +12,7 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { colors } from '../theme/colors';
 
 export type ModuleMenuItem = {
   id: number;
@@ -32,27 +34,32 @@ export function ModuleMenu({ title, items, subtitle, footer }: ModuleMenuProps) 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeArea}>
       <View style={styles.header}>
-        <Image
-          source={require('../assets/images/LogoLasCaliforniasApp.png')}
-          style={styles.logo}
-        />
+        <Text style={styles.eyebrow}>LAS CALIFORNIAS · HERRAMIENTAS TÉCNICAS</Text>
         <Text style={styles.title}>{title}</Text>
-        {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
+        <Text style={styles.subtitle}>{subtitle ?? 'Control y calidad para cada proyecto'}</Text>
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.grid}>
           {items.map(item => (
-            <View key={item.id} style={styles.item}>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => router.push(item.route)}
-                activeOpacity={0.7}
-              >
+            <TouchableOpacity
+              key={item.id}
+              style={styles.item}
+              onPress={() => router.push(item.route)}
+              activeOpacity={0.82}
+              accessibilityRole="button"
+              accessibilityLabel={item.label}
+            >
+              <View style={styles.imageFrame}>
                 <Image source={item.image} style={styles.image} />
-              </TouchableOpacity>
-              <Text style={styles.label}>{item.label}</Text>
-            </View>
+              </View>
+              <View style={styles.itemFooter}>
+                <Text style={styles.label}>{item.label}</Text>
+                <View style={styles.arrow}>
+                  <Ionicons name="arrow-forward" size={17} color={colors.primary} />
+                </View>
+              </View>
+            </TouchableOpacity>
           ))}
         </View>
       </ScrollView>
@@ -65,80 +72,108 @@ export function ModuleMenu({ title, items, subtitle, footer }: ModuleMenuProps) 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: colors.background,
   },
   header: {
-    backgroundColor: '#003366',
+    backgroundColor: colors.primary,
     width: '100%',
     alignItems: 'center',
-    paddingVertical: 15,
-    paddingTop: 15,
-    borderBottomLeftRadius: 25,
-    borderBottomRightRadius: 25,
-    marginBottom: 10,
-    elevation: 5,
+    paddingHorizontal: 24,
+    paddingTop: 18,
+    paddingBottom: 28,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
   },
   logo: {
-    width: 300,
-    height: 80,
+    width: 190,
+    height: 62,
     resizeMode: 'contain',
-    marginBottom: 5,
+    marginBottom: 12,
+  },
+  eyebrow: {
+    color: '#C6D8D0',
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 1.7,
+    marginBottom: 8,
   },
   title: {
-    fontSize: 26,
-    color: '#FFD700',
-    fontWeight: '900',
-    letterSpacing: 1,
-    marginTop: 5,
+    fontSize: 27,
+    color: colors.white,
+    fontWeight: '800',
+    letterSpacing: 0.2,
+    textAlign: 'center',
   },
   subtitle: {
-    fontSize: 16,
-    color: '#B0C4DE',
+    fontSize: 14,
+    color: '#D6E1DB',
     fontWeight: '500',
-    marginBottom: 5,
+    marginTop: 6,
+    textAlign: 'center',
   },
   scrollContent: {
-    paddingHorizontal: 15,
-    paddingTop: 10,
-    paddingBottom: 20,
+    paddingHorizontal: 18,
+    paddingTop: 24,
+    paddingBottom: 28,
   },
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
+    gap: 14,
   },
   item: {
     width: '47%',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  button: {
-    width: '100%',
-    aspectRatio: 1,
-    backgroundColor: '#003366',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: colors.white,
     borderRadius: 20,
     padding: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.15,
-    shadowOffset: { width: 0, height: 6 },
-    shadowRadius: 10,
-    elevation: 8,
-    borderWidth: 0,
+    borderWidth: 1,
+    borderColor: '#EAE7DE',
+    shadowColor: colors.primary,
+    shadowOpacity: 0.08,
+    shadowOffset: { width: 0, height: 5 },
+    shadowRadius: 12,
+    elevation: 3,
+  },
+  imageFrame: {
+    width: '100%',
+    aspectRatio: 1.05,
+    backgroundColor: '#F4F2EC',
+    borderRadius: 14,
+    padding: 7,
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   image: {
-    width: '90%',
-    height: '90%',
+    width: '100%',
+    height: '100%',
     resizeMode: 'contain',
-    borderRadius: 15,
+    borderRadius: 10,
+  },
+  itemFooter: {
+    minHeight: 54,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 3,
+    paddingTop: 8,
   },
   label: {
-    marginTop: 8,
-    fontSize: 16,
-    color: '#333333',
-    textAlign: 'center',
+    flex: 1,
+    fontSize: 14,
+    lineHeight: 19,
+    color: colors.text,
+    textAlign: 'left',
     fontWeight: '700',
-    paddingHorizontal: 5,
+    paddingRight: 4,
+  },
+  arrow: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#EAF0EC',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

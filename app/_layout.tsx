@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Stack, useRouter } from 'expo-router';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { colors } from '../theme/colors';
 
 /**
  * Componente raíz que renderiza el stack de navegación de Expo Router.
@@ -14,7 +15,7 @@ export default function Index() {
         headerTitle: '',
         headerStyle: styles.header,
         headerShadowVisible: false,
-        headerTintColor: '#FFD700',
+        headerTintColor: colors.white,
         headerLeft: () => (
           <TouchableOpacity
             accessibilityRole="button"
@@ -29,7 +30,7 @@ export default function Index() {
             style={styles.backButton}
             activeOpacity={0.75}
           >
-            <Ionicons name="arrow-back" size={24} color="#FFD700" />
+            <Ionicons name="arrow-back" size={22} color={colors.white} />
             <Text style={styles.backButtonLabel}>Volver</Text>
           </TouchableOpacity>
         ),
@@ -43,7 +44,7 @@ export default function Index() {
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: '#003366',
+    backgroundColor: colors.primary,
   },
   backButton: {
     minHeight: 44,
@@ -52,9 +53,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   backButtonLabel: {
-    color: '#FFD700',
+    color: colors.white,
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '700',
     marginLeft: 6,
   },
 });

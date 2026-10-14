@@ -22,7 +22,7 @@ const MENU_ITEMS: readonly ModuleMenuItem[] = [
   },
   {
     id: 4,
-    label: 'Riego De Liga',
+    label: 'Dosificación Real De Liga',
     route: '/CalculosCampo/RiegoLiga',
     image: require('../assets/images/LogoRiego.jpeg'),
   },

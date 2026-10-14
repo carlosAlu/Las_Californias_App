@@ -12,10 +12,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { CalculatorInput } from '../../components/CalculatorFields';
 
 // *** CONSTANTES DE MARCA (Para consistencia) ***
-const COLOR_PRIMARY = '#003366'; // Azul Oscuro de Marca
-const COLOR_ACCENT = '#FFD700'; // Dorado/Amarillo de Contraste
-const COLOR_BACKGROUND = '#F5F5F5'; // Fondo Suave
-const COLOR_TEXT_DARK = '#333333'; // Texto oscuro para fondo claro
+const COLOR_PRIMARY = '#24584D';
+const COLOR_ACCENT = '#D98555';
+const COLOR_BACKGROUND = '#F4F2EC';
+const COLOR_TEXT_DARK = '#26332F';
 
 // Constante con los tipos de mallas (tamices) usados en la granulometría
 const SIEVES = [
@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     textAlign: 'left',
     borderWidth: 2,
-    borderColor: '#E0E0E0',
+    borderColor: '#DDDCD3',
     fontWeight: '500',
     color: COLOR_TEXT_DARK,
   },
@@ -356,7 +356,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     marginBottom: 4,
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: '#DDDCD3',
   },
   cell: {
     flex: 1,
@@ -366,7 +366,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   errorText: {
-    color: '#D32F2F',
+    color: '#B84A42',
     fontWeight: '600',
     marginBottom: 8,
     textAlign: 'center',

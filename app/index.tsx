@@ -1,6 +1,8 @@
 import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { colors } from '../theme/colors';
 
 const LOGO_IMAGE = require('../assets/images/LogoLasCaliforniasApp.png');
 
@@ -11,14 +13,27 @@ export default function HomeScreen() {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <View style={styles.header}>
-          <Image source={LOGO_IMAGE} style={styles.logo} />
+          <View style={styles.logoCard}>
+            <Image source={LOGO_IMAGE} style={styles.logo} />
+          </View>
+          <Text style={styles.eyebrow}>LAS CALIFORNIAS</Text>
           <Text style={styles.welcomeTitle}>¡Bienvenido!</Text>
+          <Text style={styles.description}>
+            Herramientas para el control de calidad en obra y laboratorio.
+          </Text>
         </View>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={() => router.replace('/MenuPrincipal')}>
-            <Text style={styles.buttonText}>Comenzar</Text>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => router.replace('/MenuPrincipal')}
+            activeOpacity={0.82}
+            accessibilityRole="button"
+          >
+            <Text style={styles.buttonText}>Explorar módulos</Text>
+            <Ionicons name="arrow-forward" size={20} color={colors.white} />
           </TouchableOpacity>
+          <Text style={styles.caption}>CONTROL · PRECISIÓN · CONFIANZA</Text>
         </View>
       </View>
     </SafeAreaView>
@@ -28,54 +43,92 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#003366',
+    backgroundColor: colors.background,
   },
   container: {
     flex: 1,
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 30,
+    paddingHorizontal: 28,
+    paddingTop: 58,
+    paddingBottom: 34,
   },
   header: {
     alignItems: 'center',
-    marginTop: 50,
+    width: '100%',
+    marginTop: 18,
   },
-  logo: {
+  logoCard: {
     width: 250,
     height: 250,
+    borderRadius: 38,
+    backgroundColor: colors.white,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 36,
+    shadowColor: colors.primary,
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 12 },
+    shadowRadius: 24,
+    elevation: 6,
+  },
+  logo: {
+    width: 220,
+    height: 220,
     resizeMode: 'contain',
-    marginBottom: 20,
+  },
+  eyebrow: {
+    color: colors.accent,
+    fontSize: 12,
+    fontWeight: '800',
+    letterSpacing: 3,
+    marginBottom: 10,
   },
   welcomeTitle: {
-    fontSize: 42,
-    fontWeight: '900',
-    color: '#FFD700',
-    marginBottom: 8,
-    textShadowColor: 'rgba(0, 0, 0, 0.75)',
-    textShadowOffset: { width: -1, height: 1 },
-    textShadowRadius: 10,
+    fontSize: 38,
+    fontWeight: '800',
+    color: colors.primary,
+    marginBottom: 10,
+    letterSpacing: -0.8,
+  },
+  description: {
+    maxWidth: 300,
+    color: colors.muted,
+    fontSize: 16,
+    lineHeight: 24,
+    textAlign: 'center',
   },
   buttonContainer: {
     width: '100%',
     alignItems: 'center',
-    marginBottom: 50,
+    gap: 16,
   },
   button: {
-    backgroundColor: '#FFD700',
-    width: '80%',
+    backgroundColor: colors.primary,
+    width: '100%',
     paddingVertical: 18,
-    borderRadius: 30,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 8,
+    paddingHorizontal: 24,
+    borderRadius: 18,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 12,
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 7 },
+    shadowOpacity: 0.2,
+    shadowRadius: 12,
+    elevation: 5,
   },
   buttonText: {
-    fontSize: 22,
-    color: '#003366',
-    fontWeight: 'bold',
+    fontSize: 17,
+    color: colors.white,
+    fontWeight: '700',
     textAlign: 'center',
-    letterSpacing: 1,
+  },
+  caption: {
+    color: colors.muted,
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 2,
   },
 });

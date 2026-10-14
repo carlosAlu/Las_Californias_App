@@ -12,11 +12,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { CalculatorInput } from '../../components/CalculatorFields';
 
 // *** CONSTANTES DE MARCA (Para consistencia) ***
-const COLOR_PRIMARY = '#003366'; // Azul Oscuro de Marca
-const COLOR_ACCENT = '#FFD700'; // Dorado/Amarillo de Contraste
-const COLOR_BACKGROUND = '#F5F5F5'; // Fondo Suave
-const COLOR_ERROR = '#D32F2F'; // Rojo de Error
-const COLOR_TEXT_DARK = '#333333'; // Texto oscuro para fondo claro
+const COLOR_PRIMARY = '#24584D';
+const COLOR_ACCENT = '#D98555';
+const COLOR_BACKGROUND = '#F4F2EC';
+const COLOR_ERROR = '#B84A42';
+const COLOR_TEXT_DARK = '#26332F';
 
 /**
  * Componente principal para cálculo de morteros
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     textAlign: 'left',
     borderWidth: 2,
-    borderColor: '#E0E0E0',
+    borderColor: '#DDDCD3',
     fontWeight: '500',
     color: COLOR_TEXT_DARK,
   },
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
   button: {
     // backgroundColor se establece inline con COLOR_ACCENT
     paddingVertical: 14,
-    borderRadius: 30,
+    borderRadius: 16,
     marginTop: 15,
     alignItems: 'center',
     shadowColor: '#000',
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
   },
   // Etiqueta de resultado (texto normal)
   resultLabel: {
-    color: '#333333',
+    color: '#26332F',
     fontSize: 16,
     fontWeight: '500',
   },

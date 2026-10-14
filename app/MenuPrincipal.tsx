@@ -4,6 +4,7 @@ import { BackHandler, Modal, StyleSheet, Text, TouchableOpacity, View } from 're
 
 import { ModuleMenu } from '../components/ModuleMenu';
 import type { ModuleMenuItem } from '../components/ModuleMenu';
+import { colors } from '../theme/colors';
 
 const MENU_ITEMS: readonly ModuleMenuItem[] = [
   {
@@ -37,7 +38,7 @@ export default function MenuPrincipalScreen() {
   return (
     <ModuleMenu
       title="Menú Principal"
-      subtitle="Selecciona Un Modulo"
+      subtitle="Elige el área de trabajo"
       items={MENU_ITEMS}
       footer={
         <Modal
@@ -74,15 +75,15 @@ export default function MenuPrincipalScreen() {
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    backgroundColor: 'rgba(22, 37, 32, 0.58)',
     justifyContent: 'center',
     alignItems: 'center',
   },
   modalContent: {
-    backgroundColor: '#FFF',
+    backgroundColor: colors.white,
     width: '80%',
-    borderRadius: 20,
-    padding: 20,
+    borderRadius: 24,
+    padding: 24,
     alignItems: 'center',
     elevation: 10,
   },
@@ -90,7 +91,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
-    color: '#003366',
+    color: colors.primary,
   },
   modalRow: {
     flexDirection: 'row',
@@ -101,12 +102,12 @@ const styles = StyleSheet.create({
   modalButton: {
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 20,
+    borderRadius: 14,
     minWidth: 100,
     alignItems: 'center',
   },
   cancelButton: {
-    backgroundColor: '#003366',
+    backgroundColor: colors.primary,
   },
   exitButton: {
     backgroundColor: '#D32F2F',

@@ -12,11 +12,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { CalculatorInput } from '../../components/CalculatorFields';
 
 // *** CONSTANTES DE MARCA (Para consistencia) ***
-const COLOR_PRIMARY = '#003366'; // Azul Oscuro de Marca
-const COLOR_ACCENT = '#FFD700'; // Dorado/Amarillo de Contraste
-const COLOR_BACKGROUND = '#F5F5F5'; // Fondo Suave
-const COLOR_TEXT_DARK = '#333333'; // Texto oscuro para fondo claro
-const COLOR_LIGHT_GRAY = '#E0E0E0'; // Borde sutil
+const COLOR_PRIMARY = '#24584D';
+const COLOR_ACCENT = '#D98555';
+const COLOR_BACKGROUND = '#F4F2EC';
+const COLOR_TEXT_DARK = '#26332F';
+const COLOR_LIGHT_GRAY = '#DDDCD3';
 
 // Constante con las mallas de tamizado y sus etiquetas
 const SIEVES = [
@@ -406,7 +406,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   errorText: {
-    color: '#D32F2F',
+    color: '#B84A42',
     fontWeight: '600',
     marginBottom: 8,
     textAlign: 'center',
