@@ -41,6 +41,22 @@ export default function CompactacionCono() {
   // Referencia para hacer scroll al final al mostrar resultados
   const scrollRef = useRef<ScrollView>(null);
 
+  const handleLimpiar = () => {
+    setArenaInicial('');
+    setArenaSobrante('');
+    setMaterialHumedo('');
+    setVolArena('');
+    setHumedad('');
+    setVolMax('');
+    setPesoUtilizado(null);
+    setVolumenSondeo(null);
+    setPesoVolHum(null);
+    setFactorHumedad(null);
+    setPesoVolSecLugar(null);
+    setCompactacion(null);
+    setError('');
+  };
+
   // Navegación para ocultar el header de la pantalla
   // Función para sanitizar la entrada (permite números y punto decimal)
   const cleanDecimalInput = (text: string) => {
@@ -145,12 +161,24 @@ export default function CompactacionCono() {
                 <CustomInput label="Peso volumétrico máximo (g/cm³)" value={volMax} setValue={setVolMax} cleanInput={cleanDecimalInput}/>
 
                 {/* Botón para calcular */}
-                <TouchableOpacity 
-                    style={[styles.button, { backgroundColor: COLOR_ACCENT }]} 
-                    onPress={handleCalcular}
-                >
-                    <Text style={[styles.buttonText, { color: COLOR_PRIMARY }]}>CALCULAR COMPACTACIÓN</Text>
-                </TouchableOpacity>
+                <View style={{ flexDirection: 'row', gap: 10 }}>
+                    <TouchableOpacity
+                        style={[styles.button, { flex: 1, backgroundColor: COLOR_PRIMARY }]}
+                        onPress={handleLimpiar}
+                    >
+                        <Text style={[styles.buttonText, { color: '#FFFFFF', fontSize: 14 }]} numberOfLines={2} adjustsFontSizeToFit>
+                            LIMPIAR
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[styles.button, { flex: 1, backgroundColor: COLOR_ACCENT }]}
+                        onPress={handleCalcular}
+                    >
+                        <Text style={[styles.buttonText, { color: COLOR_PRIMARY, fontSize: 14 }]} numberOfLines={2} adjustsFontSizeToFit>
+                            CALCULAR COMPACTACIÓN
+                        </Text>
+                    </TouchableOpacity>
+                </View>
             </View>
 
             {/* Área donde se muestran los resultados o error */}
@@ -312,6 +340,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 18,
     fontWeight: '900',
+    textAlign: 'center',
     letterSpacing: 1,
   },
   // Resultados: Fila de resultado (etiqueta y valor)

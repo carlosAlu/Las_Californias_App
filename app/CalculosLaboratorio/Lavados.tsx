@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -33,6 +34,11 @@ export default function Lavados() {
   const [retained, setRetained] = useState(
     SIEVES.reduce((acc, s) => ({ ...acc, [s.id]: '0' }), {} as Record<string, string>)
   );
+
+  const handleLimpiar = () => {
+    setPaso4('');
+    setRetained(SIEVES.reduce((acc, sieve) => ({ ...acc, [sieve.id]: '0' }), {} as Record<string, string>));
+  };
 
   const scrollRef = useRef<ScrollView>(null);
   // Calcular el valor de "Pasa 200" automáticamente
@@ -123,6 +129,14 @@ export default function Lavados() {
                     onChange={text => setPaso4(cleanDecimalInput(text))}
                     placeholder="Ej: 98.5"
                 />
+                <TouchableOpacity
+                    style={{ marginTop: 15, paddingVertical: 14, borderRadius: 16, alignItems: 'center', backgroundColor: COLOR_PRIMARY }}
+                    onPress={handleLimpiar}
+                >
+                    <Text style={{ color: '#FFFFFF', fontSize: 14, fontWeight: '900', letterSpacing: 1 }}>
+                        LIMPIAR
+                    </Text>
+                </TouchableOpacity>
             </View>
 
             {/* Tarjeta de la Tabla */}

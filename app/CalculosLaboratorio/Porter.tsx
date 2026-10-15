@@ -17,51 +17,107 @@ const COLOR_ACCENT = '#D98555';
 const COLOR_BACKGROUND = '#F4F2EC';
 const COLOR_ERROR = '#B84A42';
 
-export default function Cilindros() {
-  // ... (Estados y Referencias sin cambios)
-  const [diametro, setDiametro] = useState('');
-  const [carga, setCarga] = useState('');
-  const [fc, setFc] = useState('');
-
-  const [resistencia, setResistencia] = useState<number | null>(null);
-  const [area, setArea] = useState<number | null>(null);
+export default function Porter() {
   const [error, setError] = useState('');
+  const [inputResetKey, setInputResetKey] = useState(0);
+  const [pesohumedo, setPesoHumedo] = useState<number | null>(null);
+  const [pmolde, setPMolde] = useState<number | null>(null);
+  const [Altura1, setAltura1] = useState<number | null>(null);
+  const [Altura2, setAltura2] = useState<number | null>(null);
+  const [Altura3, setAltura3] = useState<number | null>(null);
+  const [Altura4, setAltura4] = useState<number | null>(null);
+  const [areaMolde, setAMolde] = useState<number | null>(null);
+  const [humedad, setHumedadOptima] = useState<number | null>(null);
+  const [sumaAlturas, setSumaAlturas] = useState<number | null>(null);
+  const [promedioAlturas, setPromedioAlturas] = useState<number | null>(null);
+  const [alturaMaterial, setAlturaMaterial] = useState<number | null>(null);
+  const [alturaMaterialVM, setAlturaMaterialVM] = useState<number | null>(null);
+  const [pemh, setPemh] = useState<number | null>(null);
+  const [pesm, setPesm] = useState<number | null>(null);
 
   const scrollRef = useRef<ScrollView>(null);
 
-  /**
-   * Función para validar entradas, calcular área y resistencia,
-   * y actualizar los estados correspondientes.
-   */
-  const handleCalcular = () => {
-    // Limpiar mensajes y resultados previos
+  const handleLimpiar = () => {
+    setInputResetKey(key => key + 1);
+    setPesoHumedo(null);
+    setPMolde(null);
+    setAltura1(null);
+    setAltura2(null);
+    setAltura3(null);
+    setAltura4(null);
+    setAMolde(null);
+    setHumedadOptima(null);
+    setSumaAlturas(null);
+    setPromedioAlturas(null);
+    setAlturaMaterial(null);
+    setAlturaMaterialVM(null);
+    setPemh(null);
+    setPesm(null);
     setError('');
-    setResistencia(null);
-    setArea(null);
+  };
 
-    // Parsear valores de texto a números flotantes
-    const d = Number(diametro);
-    const c = Number(carga);
-    const fcValue = Number(fc);
+  const handleCalcular = () => {
+    setError('');
+    setSumaAlturas(null);
+    setPromedioAlturas(null);
+    setAlturaMaterial(null);
+    setAlturaMaterialVM(null);
+    setPemh(null);
+    setPesm(null);
 
-    // Validar que los valores sean números y mayores que cero
-    if (![d, c, fcValue].every(Number.isFinite) || d <= 0 || c <= 0 || fcValue <= 0) {
-      // Modificado para mostrar la unidad en el error (resistencia debería ser un porcentaje)
-      setError('Por favor ingresa valores válidos y mayores a cero.');
+    const valores = [
+      pesohumedo,
+      pmolde,
+      Altura1,
+      Altura2,
+      Altura3,
+      Altura4,
+      areaMolde,
+      humedad,
+    ];
+    if (
+      valores.some(valor => valor === null || !Number.isFinite(valor)) ||
+      pesohumedo === null ||
+      pmolde === null ||
+      Altura1 === null ||
+      Altura2 === null ||
+      Altura3 === null ||
+      Altura4 === null ||
+      areaMolde === null ||
+      humedad === null ||
+      pesohumedo <= 0 ||
+      pmolde <= 0 ||
+      Altura1 < 0 ||
+      Altura2 < 0 ||
+      Altura3 < 0 ||
+      Altura4 < 0 ||
+      areaMolde <= 0 ||
+      humedad < 0
+    ) {
+      setError('Ingresa valores numéricos válidos. Los pesos, la altura del molde y el área deben ser mayores a cero; las alturas faltantes y la humedad no pueden ser negativas.');
       return;
     }
 
-    // Calcular el área del cilindro: π * d^2 / 4
-    const areaCalc = (Math.PI * d ** 2) / 4;
-    setArea(areaCalc);
+    // Calcular suma y promedio de las alturas faltantes
+    const sumaAlturas = Altura1 + Altura2 + Altura3 + Altura4;
+    const promedioAlturas = sumaAlturas / 4;
 
-    // La resistencia es Carga / Área
-    const resistenciaSimple = c / areaCalc;
-    
-    // Resistencia en porcentaje: (Resistencia real / F'c) * 100
-    const resistenciaFinal = (resistenciaSimple / fcValue) * 100;
+    const alturaMaterial = pmolde - promedioAlturas;
+    if (alturaMaterial <= 0) {
+      setError('El promedio de las alturas faltantes debe ser menor que la altura del molde.');
+      return;
+    }
 
-    setResistencia(resistenciaFinal);
+    const alturaMaterialVM = alturaMaterial * areaMolde;
+    const pemh = (pesohumedo / alturaMaterialVM) * 1000;
+    const pesm = pemh / (1 + humedad / 100);
+
+    setSumaAlturas(sumaAlturas);
+    setPromedioAlturas(promedioAlturas);
+    setAlturaMaterial(alturaMaterial);
+    setAlturaMaterialVM(alturaMaterialVM);
+    setPemh(pemh);
+    setPesm(pesm);
 
     // Desplazar scroll hacia abajo para mostrar resultados
     setTimeout(() => {
@@ -82,23 +138,89 @@ export default function Cilindros() {
           keyboardShouldPersistTaps="handled"
         >
           {/* Título principal con estilo de marca */}
-          <Text style={styles.title}>Cálculo de Porter VRS</Text>
+          <Text style={styles.title}>Cálculo de Porter</Text>
 
           {/* Sección para ingresar datos (Tarjeta de Entradas) */}
           <View style={styles.card}>
             <Text style={styles.sectionTitle}>1. Datos de Entrada</Text>
             {/* Campos de entrada personalizados */}
-            <CustomInput label="Diámetro (cm)" value={diametro} setValue={setDiametro} />
-            <CustomInput label="Carga (kg)" value={carga} setValue={setCarga} />
-            <CustomInput label="Resistencia f'c" value={fc} setValue={setFc} />
+
+            <CustomInput
+              key={`peso-humedo-${inputResetKey}`}
+              label="Peso Humedo"
+              value={pesohumedo}
+              setValue={setPesoHumedo}
+              placeholder="Ej. 4000"
+            />
+            <CustomInput
+              key={`altura-molde-${inputResetKey}`}
+              label="Altura Del Molde"
+              value={pmolde}
+              setValue={setPMolde}
+              placeholder="Ej. 12.60"
+            />
+            <CustomInput
+              key={`altura-1-${inputResetKey}`}
+              label="Altura Faltante 1"
+              value={Altura1}
+              setValue={setAltura1}
+              placeholder="Ej. 3.07"
+            />
+            <CustomInput
+              key={`altura-2-${inputResetKey}`}
+              label="Altura Faltante 2"
+              value={Altura2}
+              setValue={setAltura2}
+              placeholder="Ej. 3.03"
+            />
+            <CustomInput
+              key={`altura-3-${inputResetKey}`}
+              label="Altura Faltante 3"
+              value={Altura3}
+              setValue={setAltura3}
+              placeholder="Ej. 3.04"
+            />
+            <CustomInput
+              key={`altura-4-${inputResetKey}`}
+              label="Altura Faltante 4"
+              value={Altura4}
+              setValue={setAltura4}
+              placeholder="Ej. 3.02"
+            />
+            <CustomInput
+              key={`area-molde-${inputResetKey}`}
+              label="Area Del Molde"
+              value={areaMolde}
+              setValue={setAMolde}
+              placeholder="Ej. 194"
+            />
+            <CustomInput
+              key={`humedad-optima-${inputResetKey}`}
+              label="Humedad Optima"
+              value={humedad}
+              setValue={setHumedadOptima}
+              placeholder="Ej. 6.2"
+            />
 
             {/* Botón para iniciar cálculo */}
-            <TouchableOpacity 
-                style={[styles.button, { backgroundColor: COLOR_ACCENT }]} 
+            <View style={{ flexDirection: 'row', gap: 10 }}>
+              <TouchableOpacity
+                style={[styles.button, { flex: 1, backgroundColor: COLOR_PRIMARY }]}
+                onPress={handleLimpiar}
+              >
+                <Text style={[styles.buttonText, { color: '#FFFFFF', fontSize: 14 }]} numberOfLines={2} adjustsFontSizeToFit>
+                  LIMPIAR
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.button, { flex: 1, backgroundColor: COLOR_ACCENT }]}
                 onPress={handleCalcular}
-            >
-              <Text style={[styles.buttonText, { color: COLOR_PRIMARY }]}>CALCULAR RESISTENCIA</Text>
-            </TouchableOpacity>
+              >
+                <Text style={[styles.buttonText, { color: COLOR_PRIMARY, fontSize: 14 }]} numberOfLines={2} adjustsFontSizeToFit>
+                  CALCULAR PORTER
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
           {/* Sección de resultados (Tarjeta de Salida) */}
@@ -108,30 +230,48 @@ export default function Cilindros() {
             {error ? (
               <Text style={styles.errorText}>{error}</Text>
             ) : (
+
               <>
-                {/* Mostrar área calculada */}
-                {area !== null && (
+                {/* Mostrar suma de altura faltante */}
+                {sumaAlturas !== null && (
                   <View style={styles.resultRow}>
-                    <Text style={styles.resultLabel}>Área del Cilindro:</Text>
-                    <Text style={styles.resultValue}>{area.toFixed(2)} cm²</Text>
+                    <Text style={styles.resultLabel}>Suma De Altura Faltante:</Text>
+                    <Text style={styles.resultValue}>{sumaAlturas.toFixed(2)}</Text>
                   </View>
                 )}
-                {/* Mostrar resistencia calculada */}
-                {resistencia !== null && (
-                  <>
-                    <View style={styles.resultRow}>
-                        <Text style={styles.resultLabel}>Resistencia (f&apos;c):</Text>
-                        <Text style={styles.resultValueMajor}>
-                            {area ? (Number(carga) / area).toFixed(2) : '0'} kgf/cm²
-                        </Text>
-                    </View>
-                    <View style={[styles.resultRow, styles.finalResultRow]}>
-                        <Text style={styles.resultLabelFinal}>% de Resistencia Obtenida:</Text>
-                        <Text style={styles.resultValueFinal}>
-                           {resistencia.toFixed(2)} %
-                        </Text>
-                    </View>
-                  </>
+                {/* Mostrar promedio de altura faltante */}
+                {promedioAlturas !== null && (
+                  <View style={styles.resultRow}>
+                    <Text style={styles.resultLabel}>Promedio De Altura Faltante:</Text>
+                    <Text style={styles.resultValue}>{promedioAlturas.toFixed(2)}</Text>
+                  </View>
+                )}
+                {/* Mostrar altura del material */}
+                {alturaMaterial !== null && (
+                  <View style={styles.resultRow}>
+                    <Text style={styles.resultLabel}>Altura Del Material:</Text>
+                    <Text style={styles.resultValue}>{alturaMaterial.toFixed(2)}</Text>
+                  </View>
+                )}
+                {/* Mostrar altura del material VM */}
+                {alturaMaterialVM !== null && (
+                  <View style={styles.resultRow}>
+                    <Text style={styles.resultLabel}>Altura Del Material VM:</Text>
+                    <Text style={styles.resultValue}>{alturaMaterialVM.toFixed(2)}</Text>
+                  </View>
+                )}
+                {pemh !== null && (
+                  <View style={styles.resultRow}>
+                    <Text style={styles.resultLabel}>PEMH:</Text>
+                    <Text style={styles.resultValue}>{pemh.toFixed(2)}</Text>
+                  </View>
+                )}
+                {/* Mostrar PESM */}
+                {pesm !== null && (
+                  <View style={styles.resultRow}>
+                    <Text style={styles.resultLabel}>PESM:</Text>
+                    <Text style={styles.resultValue}>{pesm.toFixed(2)}</Text>
+                  </View>
                 )}
               </>
             )}
@@ -149,17 +289,25 @@ function CustomInput({
   label,
   value,
   setValue,
+  placeholder,
 }: {
   label: string;
-  value: string;
-  setValue: (v: string) => void;
+  value: number | null;
+  setValue: (v: number | null) => void;
+  placeholder: string;
 }) {
+  const [inputText, setInputText] = useState(value?.toString() ?? '');
+
   return (
     <CalculatorInput
       label={label}
-      value={value}
-      onChangeText={setValue}
-      placeholder={`Ej: ${label.includes("f'c") ? '210' : '15.2'}`}
+      value={inputText}
+      onChangeText={text => {
+        setInputText(text);
+        setValue(text === '' ? null : Number(text));
+      }}
+      placeholder={placeholder}
+      keyboardType="numeric"
       styles={styles}
     />
   );
@@ -273,6 +421,7 @@ const styles = StyleSheet.create({
     // color: '#fff', // Esto se sobrescribe inline para usar COLOR_PRIMARY
     fontSize: 18,
     fontWeight: '900',
+    textAlign: 'center',
     letterSpacing: 1,
   },
   // Nuevo: Estilo para la fila de resultado (etiqueta y valor)

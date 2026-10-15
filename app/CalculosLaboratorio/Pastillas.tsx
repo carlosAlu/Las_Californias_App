@@ -29,6 +29,15 @@ export default function Cilindros() {
 
   const scrollRef = useRef<ScrollView>(null);
 
+  const handleLimpiar = () => {
+    setDiametro('');
+    setCarga('');
+    setFc('');
+    setResistencia(null);
+    setArea(null);
+    setError('');
+  };
+
   /**
    * Función para validar entradas, calcular área y resistencia,
    * y actualizar los estados correspondientes.
@@ -93,12 +102,24 @@ export default function Cilindros() {
             <CustomInput label="Resistencia f'c" value={fc} setValue={setFc} />
 
             {/* Botón para iniciar cálculo */}
-            <TouchableOpacity 
-                style={[styles.button, { backgroundColor: COLOR_ACCENT }]} 
+            <View style={{ flexDirection: 'row', gap: 10 }}>
+              <TouchableOpacity
+                style={[styles.button, { flex: 1, backgroundColor: COLOR_PRIMARY }]}
+                onPress={handleLimpiar}
+              >
+                <Text style={[styles.buttonText, { color: '#FFFFFF', fontSize: 14 }]} numberOfLines={2} adjustsFontSizeToFit>
+                  LIMPIAR
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.button, { flex: 1, backgroundColor: COLOR_ACCENT }]}
                 onPress={handleCalcular}
-            >
-              <Text style={[styles.buttonText, { color: COLOR_PRIMARY }]}>CALCULAR RESISTENCIA</Text>
-            </TouchableOpacity>
+              >
+                <Text style={[styles.buttonText, { color: COLOR_PRIMARY, fontSize: 14 }]} numberOfLines={2} adjustsFontSizeToFit>
+                  CALCULAR RESISTENCIA
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
           {/* Sección de resultados (Tarjeta de Salida) */}
@@ -273,6 +294,7 @@ const styles = StyleSheet.create({
     // color: '#fff', // Esto se sobrescribe inline para usar COLOR_PRIMARY
     fontSize: 18,
     fontWeight: '900',
+    textAlign: 'center',
     letterSpacing: 1,
   },
   // Nuevo: Estilo para la fila de resultado (etiqueta y valor)

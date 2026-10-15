@@ -17,51 +17,77 @@ const COLOR_ACCENT = '#D98555';
 const COLOR_BACKGROUND = '#F4F2EC';
 const COLOR_ERROR = '#B84A42';
 
-export default function Cilindros() {
-  // ... (Estados y Referencias sin cambios)
-  const [diametro, setDiametro] = useState('');
-  const [carga, setCarga] = useState('');
-  const [fc, setFc] = useState('');
-
-  const [resistencia, setResistencia] = useState<number | null>(null);
-  const [area, setArea] = useState<number | null>(null);
+export default function Proctor() {
   const [error, setError] = useState('');
+
+  const [muestraymolde, setMuestraYMolde] = useState<number | null>(null);
+  const [pmolde, setPMolde] = useState<number | null>(null);
+  const [Capacidad, setCapacidad] = useState<number | null>(null);
+
+  const [pmh, setPesoMuestraHumeda] = useState<number | null>(null);
+  const [w, setW] = useState<number | null>(null);
+  const [s, setS] = useState<number | null>(null);
+  const [HumedadPequena, setHumedadPequena] = useState<number | null>(null);
+  const [SecaPequena, setSecaPequena] = useState<number | null>(null);
+  const [humedadCalculada, setHumedadCalculada] = useState<number | null>(null);
+  const [inputResetKey, setInputResetKey] = useState(0);
 
   const scrollRef = useRef<ScrollView>(null);
 
-  /**
-   * Función para validar entradas, calcular área y resistencia,
-   * y actualizar los estados correspondientes.
-   */
+  const handleLimpiar = () => {
+    setInputResetKey(key => key + 1);
+    setMuestraYMolde(null);
+    setPMolde(null);
+    setCapacidad(null);
+    setHumedadPequena(null);
+    setSecaPequena(null);
+    setPesoMuestraHumeda(null);
+    setW(null);
+    setS(null);
+    setHumedadCalculada(null);
+    setError('');
+  };
+
   const handleCalcular = () => {
+
     // Limpiar mensajes y resultados previos
     setError('');
-    setResistencia(null);
-    setArea(null);
-
-    // Parsear valores de texto a números flotantes
-    const d = Number(diametro);
-    const c = Number(carga);
-    const fcValue = Number(fc);
 
     // Validar que los valores sean números y mayores que cero
-    if (![d, c, fcValue].every(Number.isFinite) || d <= 0 || c <= 0 || fcValue <= 0) {
-      // Modificado para mostrar la unidad en el error (resistencia debería ser un porcentaje)
+    if (
+      muestraymolde === null ||
+      pmolde === null ||
+      Capacidad === null ||
+      HumedadPequena === null ||
+      SecaPequena === null ||
+      ![muestraymolde, pmolde, Capacidad, HumedadPequena, SecaPequena].every(Number.isFinite) ||
+      muestraymolde <= 0 ||
+      pmolde <= 0 ||
+      Capacidad <= 0 ||
+      HumedadPequena <= 0 ||
+      SecaPequena <= 0
+    ) {
       setError('Por favor ingresa valores válidos y mayores a cero.');
       return;
     }
 
-    // Calcular el área del cilindro: π * d^2 / 4
-    const areaCalc = (Math.PI * d ** 2) / 4;
-    setArea(areaCalc);
+    // Calcular el peso de la muestra húmeda restando el peso del molde
+    const pmh = muestraymolde - pmolde;
+    setPesoMuestraHumeda(pmh);
 
-    // La resistencia es Carga / Área
-    const resistenciaSimple = c / areaCalc;
-    
-    // Resistencia en porcentaje: (Resistencia real / F'c) * 100
-    const resistenciaFinal = (resistenciaSimple / fcValue) * 100;
+    //Calcular &W
+    const w = pmh / Capacidad;
+    setW(w);
 
-    setResistencia(resistenciaFinal);
+    //Calcular humedad
+    const humedad = ((HumedadPequena - SecaPequena) / SecaPequena) * 100;
+    setHumedadCalculada(humedad);
+
+
+
+    //Calcular &s
+    const s = (w / (humedad + 100)) * 100;
+    setS(s);
 
     // Desplazar scroll hacia abajo para mostrar resultados
     setTimeout(() => {
@@ -88,17 +114,61 @@ export default function Cilindros() {
           <View style={styles.card}>
             <Text style={styles.sectionTitle}>1. Datos de Entrada</Text>
             {/* Campos de entrada personalizados */}
-            <CustomInput label="Diámetro (cm)" value={diametro} setValue={setDiametro} />
-            <CustomInput label="Carga (kg)" value={carga} setValue={setCarga} />
-            <CustomInput label="Resistencia f'c" value={fc} setValue={setFc} />
+            <CustomInput
+              key={`muestra-${inputResetKey}`}
+              label="Peso De La Muestra Con Molde"
+              value={muestraymolde}
+              setValue={setMuestraYMolde}
+              placeholder="Ej. 3900"
+            />
+            <CustomInput
+              key={`molde-${inputResetKey}`}
+              label="Peso Del Molde"
+              value={pmolde}
+              setValue={setPMolde}
+              placeholder="Ej. 2060"
+            />
+            <CustomInput
+              key={`capacidad-${inputResetKey}`}
+              label="Capacidad Del Molde"
+              value={Capacidad}
+              setValue={setCapacidad}
+              placeholder="Ej. 0.945"
+            />
+            <CustomInput
+              key={`humeda-${inputResetKey}`}
+              label="Peso Muestra Humeda Pequeña"
+              value={HumedadPequena}
+              setValue={setHumedadPequena}
+              placeholder="Ej. 100 "
+            />
+            <CustomInput
+              key={`seca-${inputResetKey}`}
+              label="Peso Muestra Seca Pequeña"
+              value={SecaPequena}
+              setValue={setSecaPequena}
+              placeholder="Ej. 94.6 "
+            />
 
             {/* Botón para iniciar cálculo */}
-            <TouchableOpacity 
-                style={[styles.button, { backgroundColor: COLOR_ACCENT }]} 
+            <View style={{ flexDirection: 'row', gap: 10 }}>
+              <TouchableOpacity
+                style={[styles.button, { flex: 1, backgroundColor: COLOR_PRIMARY }]}
+                onPress={handleLimpiar}
+              >
+                <Text style={[styles.buttonText, { color: '#FFFFFF', fontSize: 14 }]} numberOfLines={2} adjustsFontSizeToFit>
+                  LIMPIAR
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.button, { flex: 1, backgroundColor: COLOR_ACCENT }]}
                 onPress={handleCalcular}
-            >
-              <Text style={[styles.buttonText, { color: COLOR_PRIMARY }]}>CALCULAR RESISTENCIA</Text>
-            </TouchableOpacity>
+              >
+                <Text style={[styles.buttonText, { color: COLOR_PRIMARY, fontSize: 14 }]} numberOfLines={2} adjustsFontSizeToFit>
+                  CALCULAR PROCTOR
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
           {/* Sección de resultados (Tarjeta de Salida) */}
@@ -109,29 +179,32 @@ export default function Cilindros() {
               <Text style={styles.errorText}>{error}</Text>
             ) : (
               <>
-                {/* Mostrar área calculada */}
-                {area !== null && (
+                {/* Mostrar el peso de la muestra sin molde */}
+                {pmh !== null && (
                   <View style={styles.resultRow}>
-                    <Text style={styles.resultLabel}>Área del Cilindro:</Text>
-                    <Text style={styles.resultValue}>{area.toFixed(2)} cm²</Text>
+                    <Text style={styles.resultLabel}>Peso Muestra Humeda:</Text>
+                    <Text style={styles.resultValue}>{pmh.toFixed(2)} gr</Text>
                   </View>
                 )}
-                {/* Mostrar resistencia calculada */}
-                {resistencia !== null && (
-                  <>
-                    <View style={styles.resultRow}>
-                        <Text style={styles.resultLabel}>Resistencia (f&apos;c):</Text>
-                        <Text style={styles.resultValueMajor}>
-                            {area ? (Number(carga) / area).toFixed(2) : '0'} kgf/cm²
-                        </Text>
-                    </View>
-                    <View style={[styles.resultRow, styles.finalResultRow]}>
-                        <Text style={styles.resultLabelFinal}>% de Resistencia Obtenida:</Text>
-                        <Text style={styles.resultValueFinal}>
-                           {resistencia.toFixed(2)} %
-                        </Text>
-                    </View>
-                  </>
+                {/* Mostrar &w */}
+                {w !== null && (
+                  <View style={styles.resultRow}>
+                    <Text style={styles.resultLabel}>&w:</Text>
+                    <Text style={styles.resultValue}>{w.toFixed(2)}</Text>
+                  </View>
+                )}
+                {/* Mostrar &s */}
+                {s !== null && (
+                  <View style={styles.resultRow}>
+                    <Text style={styles.resultLabel}>&s:</Text>
+                    <Text style={styles.resultValue}>{s.toFixed(2)}</Text>
+                  </View>
+                )}
+                {humedadCalculada !== null && (
+                  <View style={styles.resultRow}>
+                    <Text style={styles.resultLabel}>Humedad:</Text>
+                    <Text style={styles.resultValue}>{humedadCalculada.toFixed(2)}%</Text>
+                  </View>
                 )}
               </>
             )}
@@ -149,17 +222,25 @@ function CustomInput({
   label,
   value,
   setValue,
+  placeholder,
 }: {
   label: string;
-  value: string;
-  setValue: (v: string) => void;
+  value: number | null;
+  setValue: (v: number | null) => void;
+  placeholder: string;
 }) {
+  const [inputText, setInputText] = useState(value?.toString() ?? '');
+
   return (
     <CalculatorInput
       label={label}
-      value={value}
-      onChangeText={setValue}
-      placeholder={`Ej: ${label.includes("f'c") ? '210' : '15.2'}`}
+      value={inputText}
+      onChangeText={text => {
+        setInputText(text);
+        setValue(text === '' ? null : Number(text));
+      }}
+      placeholder={placeholder}
+      keyboardType="numeric"
       styles={styles}
     />
   );
@@ -273,6 +354,7 @@ const styles = StyleSheet.create({
     // color: '#fff', // Esto se sobrescribe inline para usar COLOR_PRIMARY
     fontSize: 18,
     fontWeight: '900',
+    textAlign: 'center',
     letterSpacing: 1,
   },
   // Nuevo: Estilo para la fila de resultado (etiqueta y valor)

@@ -4,6 +4,7 @@ import {
   Text,
   TextInput,
   StyleSheet,
+  TouchableOpacity,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
@@ -40,6 +41,13 @@ export default function Granulometrias() {
   const [retained, setRetained] = useState(
     SIEVES.reduce((acc, s) => ({ ...acc, [s.id]: '0' }), {} as Record<string, string>)
   );
+
+  const handleLimpiar = () => {
+    setGross('');
+    setTare('');
+    setVolume('');
+    setRetained(SIEVES.reduce((acc, sieve) => ({ ...acc, [sieve.id]: '0' }), {} as Record<string, string>));
+  };
 
   // Referencia para el scroll del ScrollView
   const scrollRef = useRef<ScrollView>(null);
@@ -140,6 +148,14 @@ export default function Granulometrias() {
                         onChange={setVolume}
                         placeholder="Ej: 2.5"
                     />
+                    <TouchableOpacity
+                        style={{ marginTop: 15, paddingVertical: 14, borderRadius: 16, alignItems: 'center', backgroundColor: COLOR_PRIMARY }}
+                        onPress={handleLimpiar}
+                    >
+                        <Text style={{ color: '#FFFFFF', fontSize: 14, fontWeight: '900', letterSpacing: 1 }}>
+                            LIMPIAR
+                        </Text>
+                    </TouchableOpacity>
 
                     {/* Mostrar resultados calculados */}
                     <View style={styles.resultContainer}>

@@ -37,6 +37,13 @@ export default function Morteros() {
   // Referencia para controlar el ScrollView
   const scrollRef = useRef<ScrollView>(null);
 
+  const handleLimpiar = () => {
+    setCarga('');
+    setFc('');
+    setResistencia(null);
+    setError('');
+  };
+
   // Hook para ocultar header de navegación
   /**
    * Función que valida entradas y calcula la resistencia
@@ -94,12 +101,24 @@ export default function Morteros() {
             <CustomInput label="Resistencia Característica f'c (kgf/cm²)" value={fc} setValue={setFc} />
 
             {/* Botón de Cálculo con estilo de marca (Dorado/Azul) */}
-            <TouchableOpacity 
-                style={[styles.button, { backgroundColor: COLOR_ACCENT }]} 
+            <View style={{ flexDirection: 'row', gap: 10 }}>
+              <TouchableOpacity
+                style={[styles.button, { flex: 1, backgroundColor: COLOR_PRIMARY }]}
+                onPress={handleLimpiar}
+              >
+                <Text style={[styles.buttonText, { color: '#FFFFFF', fontSize: 14 }]} numberOfLines={2} adjustsFontSizeToFit>
+                  LIMPIAR
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.button, { flex: 1, backgroundColor: COLOR_ACCENT }]}
                 onPress={handleCalcular}
-            >
-              <Text style={[styles.buttonText, { color: COLOR_PRIMARY }]}>CALCULAR RESISTENCIA</Text>
-            </TouchableOpacity>
+              >
+                <Text style={[styles.buttonText, { color: COLOR_PRIMARY, fontSize: 14 }]} numberOfLines={2} adjustsFontSizeToFit>
+                  CALCULAR RESISTENCIA
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
           {/* Tarjeta de Resultados */}
@@ -263,6 +282,7 @@ const styles = StyleSheet.create({
     // color se establece inline con COLOR_PRIMARY
     fontSize: 18,
     fontWeight: '900',
+    textAlign: 'center',
     letterSpacing: 1,
   },
   // Resultados: Fila de resultado (etiqueta y valor)
