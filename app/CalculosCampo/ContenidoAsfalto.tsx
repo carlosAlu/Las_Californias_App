@@ -131,7 +131,7 @@ export default function ContenidoAsfalto() {
             contentContainerStyle={styles.container}
             keyboardShouldPersistTaps="handled"
         >
-            <Text style={styles.title}>Cálculo de Contenido de Asfalto</Text>
+            <Text style={styles.title}>Cálculo de Contenido de Asfalto (NO TERMINADO, NO USAR)</Text>
 
             {/* Sección de entrada de datos */}
             <View style={styles.card}>

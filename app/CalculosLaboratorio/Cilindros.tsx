@@ -97,9 +97,9 @@ export default function Cilindros() {
           <View style={styles.card}>
             <Text style={styles.sectionTitle}>1. Datos De Entrada</Text>
             {/* Campos de entrada personalizados */}
-            <CustomInput label="Diámetro (cm)" value={diametro} setValue={setDiametro} />
-            <CustomInput label="Carga (kg)" value={carga} setValue={setCarga} />
-            <CustomInput label="Resistencia f'c" value={fc} setValue={setFc} />
+            <CustomInput label="Diámetro (cm)" value={diametro} setValue={setDiametro} placeholder="Ej. 15" />
+            <CustomInput label="Carga (kg)" value={carga} setValue={setCarga} placeholder="Ej. 50230" />
+            <CustomInput label="Resistencia f'c" value={fc} setValue={setFc} placeholder="Ej. 250" />
 
             {/* Botón para iniciar cálculo */}
             <View style={{ flexDirection: 'row', gap: 10 }}>
@@ -170,17 +170,19 @@ function CustomInput({
   label,
   value,
   setValue,
+  placeholder,
 }: {
   label: string;
   value: string;
   setValue: (v: string) => void;
+  placeholder: string;
 }) {
   return (
     <CalculatorInput
       label={label}
       value={value}
       onChangeText={setValue}
-      placeholder={`Ej: ${label.includes("f'c") ? '210' : '15.2'}`}
+      placeholder={placeholder}
       styles={styles}
     />
   );

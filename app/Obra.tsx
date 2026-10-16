@@ -10,22 +10,23 @@ const MENU_ITEMS: readonly ModuleMenuItem[] = [
   },
   {
     id: 2,
-    label: '% Compactación (Método del Cono)',
-    route: '/CalculosCampo/CompactacionCono',
-    image: require('../assets/images/LogoCompactacionCono.jpg'),
-  },
-  {
-    id: 3,
-    label: 'Contenido De Asfalto',
-    route: '/CalculosCampo/ContenidoAsfalto',
-    image: require('../assets/images/LogoAsfalto.jpg'),
-  },
-  {
-    id: 4,
     label: 'Dosificación Real De Liga',
     route: '/CalculosCampo/RiegoLiga',
     image: require('../assets/images/LogoRiego.jpeg'),
   },
+  {
+    id: 3,
+    label: '% Compactación Con Cono',
+    route: '/CalculosCampo/CompactacionCono',
+    image: require('../assets/images/LogoCompactacionCono.jpg'),
+  },
+  {
+    id: 4,
+    label: 'Contenido De Asfalto',
+    route: '/CalculosCampo/ContenidoAsfalto',
+    image: require('../assets/images/LogoAsfalto.jpg'),
+  },
+  
 ];
 
 export default function Obra() {

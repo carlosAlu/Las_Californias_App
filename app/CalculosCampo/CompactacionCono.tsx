@@ -20,8 +20,8 @@ const COLOR_ERROR = '#B84A42';
 const COLOR_TEXT_DARK = '#26332F';
 const COLOR_LIGHT_GRAY = '#DDDCD3';
 
-export default function CompactacionCono() {
-  // Estados para almacenar los valores de entrada del usuario
+export default function Compactacion() {
+  // Estados para inputs del usuario
   const [arenaInicial, setArenaInicial] = useState('');
   const [arenaSobrante, setArenaSobrante] = useState('');
   const [materialHumedo, setMaterialHumedo] = useState('');
@@ -29,16 +29,18 @@ export default function CompactacionCono() {
   const [humedad, setHumedad] = useState('');
   const [volMax, setVolMax] = useState('');
 
-  // Estados para almacenar los resultados calculados
+  // Estados para resultados calculados (numéricos o null)
   const [pesoUtilizado, setPesoUtilizado] = useState<number | null>(null);
   const [volumenSondeo, setVolumenSondeo] = useState<number | null>(null);
-  const [pesoVolHum, setPesoVolHum] = useState<number | null>(null); // Ajustado para claridad
-  const [factorHumedad, setFactorHumedad] = useState<number | null>(null); // Ajustado para claridad
+  const [pesoVolHum, setPesoVolHum] = useState<number | null>(null); // Nombre de variable ajustado para claridad
+  const [humedadCalc, setHumedadCalc] = useState<number | null>(null);
   const [pesoVolSecLugar, setPesoVolSecLugar] = useState<number | null>(null);
   const [compactacion, setCompactacion] = useState<number | null>(null);
+
+  // Estado para mostrar mensajes de error
   const [error, setError] = useState('');
 
-  // Referencia para hacer scroll al final al mostrar resultados
+  // Referencia para hacer scroll automático al final
   const scrollRef = useRef<ScrollView>(null);
 
   const handleLimpiar = () => {
@@ -51,13 +53,13 @@ export default function CompactacionCono() {
     setPesoUtilizado(null);
     setVolumenSondeo(null);
     setPesoVolHum(null);
-    setFactorHumedad(null);
+    setHumedadCalc(null);
     setPesoVolSecLugar(null);
     setCompactacion(null);
     setError('');
   };
 
-  // Navegación para ocultar el header de la pantalla
+  // Hook para controlar la navegación y ocultar header
   // Función para sanitizar la entrada (permite números y punto decimal)
   const cleanDecimalInput = (text: string) => {
     let clean = text.replace(/[^0-9.]/g, '');
@@ -68,21 +70,18 @@ export default function CompactacionCono() {
     return clean;
   };
 
-  /**
-   * Función que realiza los cálculos de compactación
-   * basada en los valores ingresados por el usuario.
-   */
+  // Función que se ejecuta al presionar "Calcular"
   const handleCalcular = () => {
-    // Reiniciar estados de error y resultados
+    // Limpiar errores y resultados previos
     setError('');
     setPesoUtilizado(null);
     setVolumenSondeo(null);
     setPesoVolHum(null);
-    setFactorHumedad(null);
+    setHumedadCalc(null);
     setPesoVolSecLugar(null);
     setCompactacion(null);
 
-    // Parsear valores ingresados a números
+    // Convertir inputs a números de punto flotante
     const v1 = Number(arenaInicial);
     const v2 = Number(arenaSobrante);
     const v3 = Number(materialHumedo);
@@ -94,11 +93,12 @@ export default function CompactacionCono() {
       ![v1, v2, v3, v4, v5, v6].every(Number.isFinite) ||
       v1 <= 0 || v2 < 0 || v3 <= 0 || v4 <= 0 || v5 < 0 || v6 <= 0
     ) {
-      const mensaje = 'Ingresa valores válidos: los pesos, volúmenes y la humedad no pueden ser negativos.';
+      const mensaje = 'Por favor ingresa valores válidos y positivos en todos los campos requeridos.';
       setError(mensaje);
-      Alert.alert('Error', mensaje);
+      Alert.alert('Error',mensaje)
       return;
     }
+    
     // --- CÁLCULOS ---
     
     // 1. Peso utilizado de arena: P_arena = P_inicial - P_sobrante
@@ -111,56 +111,55 @@ export default function CompactacionCono() {
 
     // 2. Volumen del sondeo: V_sondeo = P_arena / P_vol_arena
     const volumenSondeoCalc = pesoArenaUtilizado / v4;
-    setVolumenSondeo(volumenSondeoCalc);
+    setVolumenSondeo(volumenSondeoCalc*1000);
 
     // 3. Peso volumétrico del material húmedo: P_vol_hum = P_mat_humedo / V_sondeo
     const pesoVolHumCalc = v3 / volumenSondeoCalc;
     setPesoVolHum(pesoVolHumCalc);
 
-    // 4. Factor de Humedad: F_hum = 1 + (%Humedad / 100)
-    const factorHumedadCalc = 1 + (v5 / 100); 
-    setFactorHumedad(factorHumedadCalc);
+    // 4. Factor de Humedad: F_hum = (100 + %Humedad) / 100 
+    // Nota: Ajustamos tu lógica de cálculo para que la fórmula sea estándar: PVS = PVH / (1 + H/100)
+    const factorHumedad = 1 + (v5 / 100); 
+    setHumedadCalc(factorHumedad); // Almacenamos el factor para mostrarlo en el resultado
 
     // 5. Peso Volumétrico Seco del lugar: P_vol_seco_lugar = P_vol_hum / Factor_Humedad
-    const pesoVolSecLugarCalc = pesoVolHumCalc / factorHumedadCalc;
+    const pesoVolSecLugarCalc = pesoVolHumCalc / factorHumedad;
     setPesoVolSecLugar(pesoVolSecLugarCalc);
 
     // 6. Grado de compactación: Compactación = (P_vol_seco_lugar / P_vol_max) * 100
     const compactacionCalc = (pesoVolSecLugarCalc / v6) * 100;
     setCompactacion(compactacionCalc);
 
-    // Hacer scroll al final para mostrar resultados
+    // Scroll automático al final para mostrar resultados
     setTimeout(() => {
       scrollRef.current?.scrollToEnd({ animated: true });
     }, 100);
   };
 
   return (
+    // Se envuelve todo en SafeAreaView
     <SafeAreaView style={{ flex: 1, backgroundColor: COLOR_PRIMARY }}>
+        {/* Ajusta el layout para evitar que el teclado tape inputs */}
         <KeyboardAvoidingView
         style={styles.keyboardAvoidingView}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         >
-        <ScrollView
-            ref={scrollRef}
-            contentContainerStyle={styles.container}
-            keyboardShouldPersistTaps="handled"
-        >
-            <Text style={styles.title}>Cálculo de Compactación (Cono)</Text>
+        {/* ScrollView principal con ref para scroll automático */}
+        <ScrollView ref={scrollRef} contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+            <Text style={styles.title}>Cálculo Grado De Compactación Con Cono(NO TERMINADO, NO USAR)</Text>
             
             {/* Tarjeta de Entrada de Datos */}
             <View style={styles.card}>
-                <Text style={styles.sectionTitle}>1. Datos de Entrada</Text>
+                <Text style={styles.sectionTitle}>1. Datos De Entrada</Text>
+                {/* Inputs para todos los valores necesarios */}
+                <CustomInput label="Peso de arena inicial (gr)" value={arenaInicial} setValue={setArenaInicial} cleanInput={cleanDecimalInput}/>
+                <CustomInput label="Peso sobrante de arena (gr)" value={arenaSobrante} setValue={setArenaSobrante} cleanInput={cleanDecimalInput}/>
+                <CustomInput label="Peso de material húmedo (gr)" value={materialHumedo} setValue={setMaterialHumedo} cleanInput={cleanDecimalInput}/>
+                <CustomInput label="Peso volumétrico de arena" value={volArena} setValue={setVolArena} cleanInput={cleanDecimalInput}/>
+                <CustomInput label="% de humedad" value={humedad} setValue={setHumedad} cleanInput={cleanDecimalInput}/>
+                <CustomInput label="Peso volumétrico máximo" value={volMax} setValue={setVolMax} cleanInput={cleanDecimalInput}/>
 
-                {/* Inputs para los datos de entrada */}
-                <CustomInput label="Peso de arena inicial (g)" value={arenaInicial} setValue={setArenaInicial} cleanInput={cleanDecimalInput}/>
-                <CustomInput label="Peso sobrante de arena (g)" value={arenaSobrante} setValue={setArenaSobrante} cleanInput={cleanDecimalInput}/>
-                <CustomInput label="Peso de material húmedo (g)" value={materialHumedo} setValue={setMaterialHumedo} cleanInput={cleanDecimalInput}/>
-                <CustomInput label="Peso volumétrico de arena (g/cm³)" value={volArena} setValue={setVolArena} cleanInput={cleanDecimalInput}/>
-                <CustomInput label="% de humedad (H%)" value={humedad} setValue={setHumedad} cleanInput={cleanDecimalInput}/>
-                <CustomInput label="Peso volumétrico máximo (g/cm³)" value={volMax} setValue={setVolMax} cleanInput={cleanDecimalInput}/>
-
-                {/* Botón para calcular */}
+                {/* Botón para disparar el cálculo */}
                 <View style={{ flexDirection: 'row', gap: 10 }}>
                     <TouchableOpacity
                         style={[styles.button, { flex: 1, backgroundColor: COLOR_PRIMARY }]}
@@ -189,11 +188,10 @@ export default function CompactacionCono() {
                 ) : (
                     <>
                         {/* Mostrar resultados intermedios */}
-                        <ResultRow label="Peso de Arena Utilizado (g):" value={pesoUtilizado} units="g" />
-                        <ResultRow label="Volumen del Sondeo (cm³):" value={volumenSondeo} units="cm³" decimalPlaces={3} />
-                        <ResultRow label="Peso Vol. Húmedo (g/cm³):" value={pesoVolHum} units="g/cm³" decimalPlaces={3} />
-                        <ResultRow label="Factor de Humedad (1+H/100):" value={factorHumedad} units="" decimalPlaces={4} />
-                        <ResultRow label="Peso Vol. Seco del Lugar (g/cm³):" value={pesoVolSecLugar} units="g/cm³" decimalPlaces={3} />
+                        <ResultRow label="Peso de Arena Utilizado:" value={pesoUtilizado} units="g" />
+                        <ResultRow label="Volumen del Sondeo:" value={volumenSondeo} units="cm³" decimalPlaces={3} />
+                        <ResultRow label="Peso Vol. Mat. Húmedo:" value={pesoVolHum} units="g/cm³" decimalPlaces={3} />
+                        <ResultRow label="Peso Vol. Seco del Lugar:" value={pesoVolSecLugar} units="g/cm³" decimalPlaces={3} />
                         
                         {/* Mostrar resultado final destacado */}
                         {compactacion !== null && (
@@ -226,7 +224,7 @@ function CustomInput({ label, value, setValue, cleanInput }: { label: string, va
   );
 }
 
-// Componente para mostrar filas de resultados (reutilizado)
+// Nuevo componente para mostrar filas de resultados
 function ResultRow({ label, value, units = '', decimalPlaces = 2 }: { label: string, value: number | null, units?: string, decimalPlaces?: number }) {
   return (
     <CalculatorResultRow
@@ -239,6 +237,7 @@ function ResultRow({ label, value, units = '', decimalPlaces = 2 }: { label: str
   );
 }
 
+// Estilos para los componentes
 const styles = StyleSheet.create({
   // Modificado: Usar el fondo claro y SafeAreaView
   keyboardAvoidingView: {
@@ -362,7 +361,6 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     borderTopWidth: 2,
     borderTopColor: COLOR_ACCENT, // Separador final dorado
-
   },
   // Etiqueta de resultado (texto normal)
   resultLabel: {
@@ -376,6 +374,7 @@ const styles = StyleSheet.create({
     color: COLOR_PRIMARY,
     fontSize: 18,
     fontWeight: '700',
+    flex: 1,
   },
   // Valor de resultado (la cifra)
   resultValue: {
@@ -390,8 +389,6 @@ const styles = StyleSheet.create({
     color: COLOR_ERROR, // Rojo de alto impacto para el porcentaje final
     fontWeight: '900',
     fontSize: 24,
-    flex: 1,
-    textAlign: 'right',
   },
   errorText: {
     color: COLOR_ERROR,

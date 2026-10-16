@@ -111,7 +111,7 @@ export default function Compactacion() {
 
     // 2. Volumen del sondeo: V_sondeo = P_arena / P_vol_arena
     const volumenSondeoCalc = pesoArenaUtilizado / v4;
-    setVolumenSondeo(volumenSondeoCalc);
+    setVolumenSondeo(volumenSondeoCalc*1000);
 
     // 3. Peso volumétrico del material húmedo: P_vol_hum = P_mat_humedo / V_sondeo
     const pesoVolHumCalc = v3 / volumenSondeoCalc;
@@ -152,12 +152,12 @@ export default function Compactacion() {
             <View style={styles.card}>
                 <Text style={styles.sectionTitle}>1. Datos De Entrada</Text>
                 {/* Inputs para todos los valores necesarios */}
-                <CustomInput label="Peso de arena inicial (g)" value={arenaInicial} setValue={setArenaInicial} cleanInput={cleanDecimalInput}/>
-                <CustomInput label="Peso sobrante de arena (g)" value={arenaSobrante} setValue={setArenaSobrante} cleanInput={cleanDecimalInput}/>
-                <CustomInput label="Peso de material húmedo (g)" value={materialHumedo} setValue={setMaterialHumedo} cleanInput={cleanDecimalInput}/>
-                <CustomInput label="Peso volumétrico de arena (g/cm³)" value={volArena} setValue={setVolArena} cleanInput={cleanDecimalInput}/>
-                <CustomInput label="% de humedad (H%)" value={humedad} setValue={setHumedad} cleanInput={cleanDecimalInput}/>
-                <CustomInput label="Peso volumétrico máximo (g/cm³)" value={volMax} setValue={setVolMax} cleanInput={cleanDecimalInput}/>
+                <CustomInput label="Peso de arena inicial (gr)" value={arenaInicial} setValue={setArenaInicial} cleanInput={cleanDecimalInput} placeholder="Ej. 500"/>
+                <CustomInput label="Peso sobrante de arena (gr)" value={arenaSobrante} setValue={setArenaSobrante} cleanInput={cleanDecimalInput} placeholder="Ej. 950"/>
+                <CustomInput label="Peso de material húmedo (gr)" value={materialHumedo} setValue={setMaterialHumedo} cleanInput={cleanDecimalInput} placeholder="Ej. 5300"/>
+                <CustomInput label="Peso volumétrico de arena" value={volArena} setValue={setVolArena} cleanInput={cleanDecimalInput} placeholder="Ej. 1435"/>
+                <CustomInput label="% de humedad" value={humedad} setValue={setHumedad} cleanInput={cleanDecimalInput} placeholder="Ej. 7"/>
+                <CustomInput label="Peso volumétrico máximo" value={volMax} setValue={setVolMax} cleanInput={cleanDecimalInput} placeholder="Ej. 1900"/>
 
                 {/* Botón para disparar el cálculo */}
                 <View style={{ flexDirection: 'row', gap: 10 }}>
@@ -188,11 +188,10 @@ export default function Compactacion() {
                 ) : (
                     <>
                         {/* Mostrar resultados intermedios */}
-                        <ResultRow label="Peso de Arena Utilizado (g):" value={pesoUtilizado} units="g" />
-                        <ResultRow label="Volumen del Sondeo (cm³):" value={volumenSondeo} units="cm³" decimalPlaces={3} />
-                        <ResultRow label="Peso Vol. Húmedo (g/cm³):" value={pesoVolHum} units="g/cm³" decimalPlaces={3} />
-                        <ResultRow label="Factor de Humedad (1+H/100):" value={humedadCalc} units="" decimalPlaces={4} />
-                        <ResultRow label="Peso Vol. Seco del Lugar (g/cm³):" value={pesoVolSecLugar} units="g/cm³" decimalPlaces={3} />
+                        <ResultRow label="Peso de Arena Utilizado:" value={pesoUtilizado} units="g" />
+                        <ResultRow label="Volumen del Sondeo:" value={volumenSondeo} units="cm³" decimalPlaces={3} />
+                        <ResultRow label="Peso Vol. Mat. Húmedo:" value={pesoVolHum} units="g/cm³" decimalPlaces={3} />
+                        <ResultRow label="Peso Vol. Seco del Lugar:" value={pesoVolSecLugar} units="g/cm³" decimalPlaces={3} />
                         
                         {/* Mostrar resultado final destacado */}
                         {compactacion !== null && (
@@ -213,13 +212,14 @@ export default function Compactacion() {
 }
 
 // Componente reutilizable para inputs con etiqueta
-function CustomInput({ label, value, setValue, cleanInput }: { label: string, value: string, setValue: (v: string) => void, cleanInput: (t: string) => string }) {
+function CustomInput({ label, value, setValue, cleanInput, placeholder }: { label: string, value: string, setValue: (v: string) => void, cleanInput: (t: string) => string, placeholder: string }) {
   return (
     <CalculatorInput
       label={label}
       value={value}
       onChangeText={setValue}
       sanitizeInput={cleanInput}
+      placeholder={placeholder}
       styles={styles}
     />
   );

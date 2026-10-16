@@ -91,7 +91,7 @@ export default function Cilindros() {
           keyboardShouldPersistTaps="handled"
         >
           {/* Título principal con estilo de marca */}
-          <Text style={styles.title}>Cálculo de Resistencia de Pastillas</Text>
+          <Text style={styles.title}>Cálculo de Resistencia de Pastillas(NO TERMINADO, NO USAR)</Text>
 
           {/* Sección para ingresar datos (Tarjeta de Entradas) */}
           <View style={styles.card}>
