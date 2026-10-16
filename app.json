@@ -8,9 +8,13 @@
     "scheme": "lascaliforniasapp",
     "userInterfaceStyle": "automatic",
     "ios": {
+      "bundleIdentifier": "com.cjimenez20.LasCaliforniasApp",
       "supportsTablet": true,
       "runtimeVersion": {
         "policy": "appVersion"
+      },
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
